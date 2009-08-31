@@ -1,4 +1,4 @@
-<?php if(!defined('IN_UCHOME')) exit('Access Denied');?><?php subtplcheck('admin/tpl/cache|admin/tpl/header|admin/tpl/side|admin/tpl/footer|template/default/header|template/default/footer', '1251703608', 'admin/tpl/cache');?><?php $_TPL['menunames'] = array(
+<?php if(!defined('IN_UCHOME')) exit('Access Denied');?><?php subtplcheck('admin/tpl/cache|admin/tpl/header|admin/tpl/side|admin/tpl/footer|template/default/header|template/default/footer', '1251711814', 'admin/tpl/cache');?><?php $_TPL['menunames'] = array(
 		'index' => '管理首页',
 		'config' => '站点设置',
 		'privacy' => '隐私设置',

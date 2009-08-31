@@ -1,4 +1,4 @@
-<?php if(!defined('IN_UCHOME')) exit('Access Denied');?><?php subtplcheck('template/default/network|template/default/header|template/default/footer', '1251703627', 'template/default/network');?><?php $_TPL['nosidebar']=1; ?>
+<?php if(!defined('IN_UCHOME')) exit('Access Denied');?><?php subtplcheck('template/default/network|template/default/header|template/default/footer', '1251711816', 'template/default/network');?><?php $_TPL['nosidebar']=1; ?>
 <?php if(empty($_SGLOBAL['inajax'])) { ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -261,6 +261,11 @@ tipBox.style.top = showTop + 'px';
 
 tipBox.style.visibility = 'visible';
 }
+
+// OpenID
+function checkOpenIDFormat(){
+var url = $('openid_input').value;	$('openid_identifier').value=(url.indexOf('http://')<0&&url.indexOf('https://')<0 ? 'http://openid.enjoyoung.cn/'+url : url);
+}
 </script>
 
 <?php if(empty($_SGLOBAL['supe_uid'])) { ?>
@@ -279,47 +284,27 @@ tipBox.style.visibility = 'visible';
 
 <!-- 开始 openid登录框 -->
 <div class="nbox_s side_rbox" id="nlogin_box">
-<h3 class="ntitle">请登录</h3>
+<h3 class="ntitle">请使用星尚通行证登录</h3>
 <div class="side_rbox_c">
-<form method="post" name="loginform" id="loginform" onsubmit="submitLogin();" action="OpenID.php">
-<input name="formhash" value="150129d4" type="hidden">
-<input name="referer" value="http://bbs.enjoyoung.cn/index.php" type="hidden">
-
-<select onchange="onLoginTypeChange(this);" id="loginfield" style="float: left; width: 50px; display: none;" name="loginfield" selecti="0">
-<option value="openid"></option>
-</select>
-<a href="javascript:;" hidefocus="true" class="loadselect" id="loginfield_selectinput" onfocus="loadselect_keyinit(event, 1)" onblur="loadselect_keyinit(event, 2)" onmouseover="this.focus()" onmouseout="this.blur()" onkeyup="loadselect_key(this, event, 'loginfield', 'floatlayout_login')" onclick="loadselect_viewmenu(this, 'loginfield', 0, 'floatlayout_login');doane(event)" tabindex="1">星尚通行证</a>
-<ul onfocus="loadselect_keyinit(event, 1)" onblur="loadselect_keyinit(event, 2)" class="newselect" id="loginfield_selectmenu" style="display: none;">
-<li class="current" k_id="loginfield" k_value="openid" onclick="loadselect_liset('loginfield', 0, 'loginfield','openid',this.innerHTML, 0)">星尚通行证</li>
-<li k_id="loginfield" k_value="username" onclick="loadselect_liset('loginfield', 0, 'loginfield','username',this.innerHTML, 1)">用户名</li>
-<li k_id="loginfield" k_value="uid" onclick="loadselect_liset('loginfield', 0, 'loginfield','uid',this.innerHTML, 2)">UID</li>
+<?php if(!$uid&&empty($is_binding)||$uid) { ?>
+<form method="post" action="OpenID.php" onsubmit="checkOpenIDFormat();" class="c_form">
+<label for="openid_input">星尚通行证</label>	
+<input id="openid_input" name="openid_input" style='background: #FFFFFF url(image/login-bg.gif) no-repeat; padding-left: 18px;'/>
+<input type="hidden" name="openid_identifier" value="" id="openid_identifier">
+<br />	
+<button class="submit" type="submit" onclick="document.getElementById('spinner').style.visibility='visible'"><?=$lang_login_add?></button>
+<span id="spinner" style="visibility:hidden"> <img src="image/spinner.gif" /><span><?=$openidlang['openid_auth']?></span></span>
+<br />	
+<ul>
+<li><?=$openidlang['openid_intro']?></li>
+<li><?=$openidlang['openid_guide']?></li>
+<li><?=$openidlang['openid_sites']?></li>
 </ul>
-
-<input id="username" name="username" autocomplete="off" class="openid" tabindex="1" value="" type="text">
-<input name="openid_identifier" id="openid_identifier" type="hidden"> 
-</div>
-<p id="password_holder" class="selectinput loginpsw" style="display: none; ">
-<label for="password3">密　码　：</label>
-<input id="password3" name="password" onfocus="clearpwd()" onkeypress="detectcapslock(event, this)" class="txt" tabindex="1" type="password">
-</p>
-<div id="selecttype" class="selecttype" style="display: none;">
-<select change="if($('questionid').value &gt; 0) {$('answer').style.display='';} else {$('answer').style.display='none';}" name="questionid" id="questionid" selecti="0" style="width: 0px; display: none;">
-
-<div class="logininfo multinfo">
-<p>忘记密码, <a href="http://openid.enjoyoung.cn/passwords/troubleshooting" title="找回密码">找回密码</a></p>
-<p>无法登录，<a href="javascript:;" onclick="ajaxget('float_register.php?action=clearcookies&amp;formhash=150129d4', 'returnmessage2', 'returnmessage2');doane(event);" title="清除登录状态">清除登录状态</a></p>
-</div>
-<p class="fsubmit">
-<button class="submit" type="submit" name="loginsubmit" value="true" tabindex="1">登录</button>
-<input class="checkbox" name="cookietime" id="cookietime" tabindex="1" value="2592000" type="checkbox"> <label for="cookietime">记住我的登录状态</label>
-</p>
 </form>
+<?php } ?>
 </div>
 </div>
 <!-- 结束 openid登录框 -->	
-
-
-
 
 </div>
 <?php } ?>

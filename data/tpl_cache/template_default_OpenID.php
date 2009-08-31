@@ -1,4 +1,4 @@
-<?php if(!defined('IN_UCHOME')) exit('Access Denied');?><?php subtplcheck('template/default/OpenID|template/default/header|template/default/footer', '1251703639', 'template/default/OpenID');?><?php $_TPL['nosidebar']=1; ?>
+<?php if(!defined('IN_UCHOME')) exit('Access Denied');?><?php subtplcheck('template/default/OpenID|template/default/header|template/default/footer', '1251711819', 'template/default/OpenID');?><?php $_TPL['nosidebar']=1; ?>
 <?php if(empty($_SGLOBAL['inajax'])) { ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -165,21 +165,20 @@
 <?php } ?>
 
 
-<div id="nav"><a href="index.php"><?=$bbname?></a> &raquo;OpenID</div>
-
 <?php if(!$uid&&empty($is_binding)||$uid) { ?>
-<form method="post" action="OpenID.php">
-<h3> OpenID <?=$lang_login_add?></h3>
+<form method="post" action="OpenID.php" onsubmit="checkOpenIDFormat();" class="c_form">
 <table cellspacing="0" cellpadding="0" class="formtable">
 <caption>
 <h2>请使用星尚通行证登录</h2>
 <p>如果您在本站已拥有星尚通行证，请使用已有的星尚通行证直接进行登录即可，不需重复注册。</p>
 </caption>
 
+<tbody>
 <tr>
-<th><b>OpenID URL</b></th>
-<td>
-<input size="50"  name="openid_identifier" style='background: #FFFFFF url(image/login-bg.gif) no-repeat; padding-left: 18px;'/>
+<th width="100"><label for="openid_input">星尚通行证</label></th>
+<td>			
+<input id="openid_input" name="openid_input" style='background: #FFFFFF url(image/login-bg.gif) no-repeat; padding-left: 18px;'/>
+<input type="hidden" name="openid_identifier" value="" id="openid_identifier">	
 <button class="submit" type="submit" onclick="document.getElementById('spinner').style.visibility='visible'"><?=$lang_login_add?></button>
 <span id="spinner" style="visibility:hidden"> <img src="image/spinner.gif" /><span><?=$openidlang['openid_auth']?></span></span>				
 </td>
@@ -194,80 +193,16 @@
 </ul>
 </td>
 </tr>
+</tbody>
 </table>
 </form>
 <?php } ?>
 
-
-<form id="loginform" name="loginform" action="do.php?ac=<?=$_SCONFIG['login_action']?>&<?=$url_plus?>&ref" method="post" class="c_form">	
-<table cellpadding="0" cellspacing="0" class="formtable">
-<caption>
-<h2>请登录</h2>
-<p>如果您在本站已拥有帐号，请使用已有的帐号信息直接进行登录即可，不需重复注册。</p>
-</caption>
-
-<tbody style="display:<?php if($_SGLOBAL['input_seccode']) { ?>none<?php } ?>;">
-<tr><th width="100"><label for="username">用户名</label></th><td><input type="text" name="username" id="username" class="t_input" value="<?=$membername?>" tabindex="2" /></td></tr>
-<tr><th width="100"><label for="password">密　码</label></th><td><input type="password" name="password" id="password" class="t_input" tabindex="3" value="<?=$password?>" /></td></tr>
-<tr>
-<th width="100">&nbsp;</th>
-<td>
-<input type="checkbox" id="cookietime" name="cookietime" value="315360000" <?=$cookiecheck?> style="margin-bottom: -2px;"><label for="cookietime">下次自动登录</label>
-</td>
-</tr>
-</tbody>
-<tr><th width="100">&nbsp;</th><td>
-<input type="hidden" name="refer" value="<?=$refer?>" />
-<input type="submit" id="loginsubmit" name="loginsubmit" value="登录" class="submit" tabindex="5" />
-<a href="do.php?ac=lostpasswd">忘记密码?</a>
-</td></tr>
-</table>
-<input type="hidden" name="formhash" value="<?php echo formhash(); ?>" /></form>
-
 <script type="text/javascript">
-var lastSecCode = '';
-function checkSeccode() {
-var seccodeVerify = $('seccode').value;
-if(seccodeVerify == lastSecCode) {
-return;
-} else {
-lastSecCode = seccodeVerify;
-}
-ajaxresponse('checkseccode', 'op=checkseccode&seccode=' + (is_ie && document.charset == 'utf-8' ? encodeURIComponent(seccodeVerify) : seccodeVerify));
-}
-function ajaxresponse(objname, data) {
-var x = new Ajax('XML', objname);
-x.get('do.php?ac=<?=$_SCONFIG['register_action']?>&' + data, function(s){
-var obj = $(objname);
-s = trim(s);
-if(s.indexOf('succeed') > -1) {
-obj.style.display = '';
-obj.innerHTML = '<img src="image/check_right.gif" width="13" height="13">';
-obj.className = "warning";
-} else {
-warning(obj, s);
-}
-});
-}
-function warning(obj, msg) {
-if((ton = obj.id.substr(5, obj.id.length)) != 'password2') {
-$(ton).select();
-}
-obj.style.display = '';
-obj.innerHTML = '<img src="image/check_error.gif" width="13" height="13"> &nbsp; ' + msg;
-obj.className = "warning";
-}
-
+  function checkOpenIDFormat(){
+var url = $('openid_input').value;	$('openid_identifier').value=(url.indexOf('http://')<0&&url.indexOf('https://')<0 ? 'http://openid.enjoyoung.cn/'+url : url);
+  }	
 </script>
-
-<?php if($_SGLOBAL['input_seccode']) { ?>
-<script>
-$('seccode').style.background = '#FFFFCC';
-$('seccode').focus();
-</script>
-<?php } ?>
-
-{/if}
 
 
 <div class="c_form">
