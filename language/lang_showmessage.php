@@ -260,7 +260,7 @@ $_SGLOBAL['msglang'] = array(
 
 
 	//source/do_login.php
-	'login_success' => '登录成功了，现在引导您进入登录前页面 \\1',
+	'login_success' => '登录成功了，现在引导您进入登录前页面',
 	'not_open_registration' => '非常抱歉，本站目前暂时不开放注册',
 	'not_open_registration_invite' => '非常抱歉，本站目前暂时不允许用户直接注册，需要有好友邀请链接才能注册',
 
