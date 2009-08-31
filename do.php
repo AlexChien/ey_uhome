@@ -12,6 +12,8 @@ $ac = empty($_GET['ac'])?'':$_GET['ac'];
 //自定义登录
 if($ac == $_SCONFIG['login_action']) {
 	$ac = 'login';
+} elseif($ac == 'login_action') {
+	$ac = 'login';
 } elseif($ac == 'login') {
 	$ac = '';
 }

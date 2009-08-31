@@ -90,17 +90,24 @@ function getScheme() {
 }
 
 function getReturnTo() {
-    return sprintf("%s://%s:%s%s/OpenID.php",
-                   getScheme(), $_SERVER['SERVER_NAME'],
-                   $_SERVER['SERVER_PORT'],
-                   dirname($_SERVER['PHP_SELF']));
+    // return sprintf("%s://%s:%s%s/OpenID.php",
+    //                getScheme(), $_SERVER['SERVER_NAME'],
+    //                $_SERVER['SERVER_PORT'],
+    //                dirname($_SERVER['PHP_SELF']));
+    // return sprintf("%s://%s:%s/OpenID.php",
+    //                getScheme(), $_SERVER['SERVER_NAME'],
+    //                $_SERVER['SERVER_PORT']);
+    // return "http://localhost/~stainless/ey_uhome/OpenID.php";
+    return "http://home.enjoyoung.cn/OpenID.php";
 }
+echo getReturnTo()."<br/>";
 
 function getTrustRoot() {
-    return sprintf("%s://%s:%s%s/",
+    return sprintf("%s://%s:%s%s",
                    getScheme(), $_SERVER['SERVER_NAME'],
                    $_SERVER['SERVER_PORT'],
                    dirname($_SERVER['PHP_SELF']));
 }
+echo getTrustRoot();
 
 ?>
