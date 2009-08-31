@@ -1,16 +1,20 @@
 <!--{eval $_TPL['nosidebar']=1;}-->
 <!--{template header}-->
 
-<div id="nav"><a href="index.php">$bbname</a> &raquo;OpenID</div>
-
 <!--{if !$uid&&empty($is_binding)||$uid}-->
-<form method="post" action="OpenID.php">
-	<h3> OpenID $lang_login_add</h3>
+<form method="post" action="OpenID.php" onsubmit="checkOpenIDFormat();" class="c_form">
 	<table cellspacing="0" cellpadding="0" class="formtable">
+		<caption>
+			<h2>请使用星尚通行证登录</h2>
+			<p>如果您在本站已拥有星尚通行证，请使用已有的星尚通行证直接进行登录即可，不需重复注册。</p>
+		</caption>
+		
+		<tbody>
 		<tr>
-			<th><b>OpenID URL</b></th>
-			<td>
-				<input size="50"  name="openid_identifier" style='background: #FFFFFF url(image/login-bg.gif) no-repeat; padding-left: 18px;'/>
+			<th width="100"><label for="openid_input">星尚通行证</label></th>
+			<td>			
+				<input id="openid_input" name="openid_input" style='background: #FFFFFF url(image/login-bg.gif) no-repeat; padding-left: 18px;'/>
+				<input type="hidden" name="openid_identifier" value="" id="openid_identifier">	
 				<button class="submit" type="submit" onclick="document.getElementById('spinner').style.visibility='visible'">$lang_login_add</button>
 				<span id="spinner" style="visibility:hidden"> <img src="image/spinner.gif" /><span>$openidlang['openid_auth']</span></span>				
 			</td>
@@ -25,10 +29,29 @@
 				</ul>
 			</td>
 		</tr>
+		</tbody>
 	</table>
 </form>
 <!--{/if}-->
 
+<script type="text/javascript">
+  function checkOpenIDFormat(){
+	var url = $('openid_input').value;	$('openid_identifier').value=(url.indexOf('http://')<0&&url.indexOf('https://')<0 ? 'http://openid.enjoyoung.cn/'+url : url);
+  }	
+</script>
 
 
+<div class="c_form">
+<table cellpadding="0" cellspacing="0" class="formtable">
+	<caption>
+		<h2>还没有注册吗？</h2>
+		<p>如果还没有本站的通行帐号，请先注册一个属于自己的帐号吧。</p>
+	</caption>
+	<tr>
+		<td>
+		<a href="http://openid.enjoyoung.cn/account/new" style="display: block; margin: 0 110px 2em; width: 100px; border: 1px solid #486B26; background: #76A14F; line-height: 30px; font-size: 14px; text-align: center; text-decoration: none;"><strong style="display: block; border-top: 1px solid #9EBC84; color: #FFF; padding: 0 0.5em;">立即注册</strong></a>
+		</td>
+	</tr>
+</table>
+</div>
 <!--{template footer}-->
