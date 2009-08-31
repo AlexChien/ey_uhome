@@ -1,5 +1,4 @@
-<?php if(!defined('IN_UCHOME')) exit('Access Denied');?><?php subtplcheck('template/default/showmessage|template/default/header|template/default/footer', '1251711824', 'template/default/showmessage');?><?php $_TPL['nosidebar']=1; ?>
-<?php if(empty($_SGLOBAL['inajax'])) { ?>
+<?php if(!defined('IN_UCHOME')) exit('Access Denied');?><?php subtplcheck('template/default/do_ajax|template/default/header|template/default/space_comment_li|template/default/space_post_li|template/default/space_share_li|template/default/footer', '1251713240', 'template/default/do_ajax');?><?php if(empty($_SGLOBAL['inajax'])) { ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -164,22 +163,186 @@
 
 <?php } ?>
 
-<div class="showmessage">
-<div class="ye_r_t"><div class="ye_l_t"><div class="ye_r_b"><div class="ye_l_b">
-<caption>
-<h2>信息提示</h2>
-</caption>
-<p><?=$message?></p>
-<p class="op">
-<?php if($url_forward) { ?>
-<a href="<?=$url_forward?>">页面跳转中...</a>
+
+<?php if($op == 'comment') { ?>
+
+<?php if(is_array($list)) { foreach($list as $value) { ?>
+<?php if(empty($ajax_edit)) { ?><li id="comment_<?=$value['cid']?>_li"><?php } ?>
+<?php if($value['author']) { ?>
+<div class="avatar48"><a href="space.php?uid=<?=$value['authorid']?>"><?php echo avatar($value[authorid],small); ?></a></div>
 <?php } else { ?>
-<a href="javascript:history.go(-1);">返回上一页</a> | 
-<a href="index.php">返回首页</a>
+<div class="avatar48"><img src="image/magic/hidden.gif" class="avatar" /></div>
 <?php } ?>
-</p>
-</div></div></div></div>
+<div class="title">
+<div class="r_option">
+
+<?php if($value['authorid'] != $_SGLOBAL['supe_uid'] && $value['author'] == "" && $_SGLOBAL['magic']['reveal']) { ?>
+<a id="a_magic_reveal_<?=$value['cid']?>" href="magic.php?mid=reveal&idtype=cid&id=<?=$value['cid']?>" onclick="ajaxmenu(event,this.id,1)"><img src="image/magic/reveal.small.gif" class="magicicon"><?=$_SGLOBAL['magic']['reveal']?></a>
+<span class="pipe">|</span>
+<?php } ?>
+
+<?php if($value['authorid']==$_SGLOBAL['supe_uid']) { ?>
+<?php if($_SGLOBAL['magic']['anonymous']) { ?>
+<img src="image/magic/anonymous.small.gif" class="magicicon">
+<a id="a_magic_anonymous_<?=$value['cid']?>" href="magic.php?mid=anonymous&idtype=cid&id=<?=$value['cid']?>" onclick="ajaxmenu(event,this.id, 1)"><?=$_SGLOBAL['magic']['anonymous']?></a>
+<span class="pipe">|</span>
+<?php } ?>
+<?php if($_SGLOBAL['magic']['flicker']) { ?>
+<img src="image/magic/flicker.small.gif" class="magicicon">
+<?php if($value['magicflicker']) { ?>
+<a id="a_magic_flicker_<?=$value['cid']?>" href="cp.php?ac=magic&op=cancelflicker&idtype=cid&id=<?=$value['cid']?>" onclick="ajaxmenu(event,this.id)">取消<?=$_SGLOBAL['magic']['flicker']?></a>
+<?php } else { ?>
+<a id="a_magic_flicker_<?=$value['cid']?>" href="magic.php?mid=flicker&idtype=cid&id=<?=$value['cid']?>" onclick="ajaxmenu(event,this.id, 1)"><?=$_SGLOBAL['magic']['flicker']?></a>
+<?php } ?>
+<span class="pipe">|</span>
+<?php } ?>
+
+<a href="cp.php?ac=comment&op=edit&cid=<?=$value['cid']?>" id="c_<?=$value['cid']?>_edit" onclick="ajaxmenu(event, this.id, 1)">编辑</a>
+<?php } ?>
+<?php if($value['authorid']==$_SGLOBAL['supe_uid'] || $value['uid']==$_SGLOBAL['supe_uid'] || checkperm('managecomment')) { ?>
+<a href="cp.php?ac=comment&op=delete&cid=<?=$value['cid']?>" id="c_<?=$value['cid']?>_delete" onclick="ajaxmenu(event, this.id)">删除</a>
+<?php } ?>
+<?php if($value['authorid']!=$_SGLOBAL['supe_uid'] && ($value['idtype'] != 'uid' || $space['self'])) { ?>
+<a href="cp.php?ac=comment&op=reply&cid=<?=$value['cid']?>&feedid=<?=$feedid?>" id="c_<?=$value['cid']?>_reply" onclick="ajaxmenu(event, this.id, 1)">回复</a>
+<?php } ?>
+<a href="cp.php?ac=common&op=report&idtype=comment&id=<?=$value['cid']?>" id="a_report_<?=$value['cid']?>" onclick="ajaxmenu(event, this.id, 1)">举报</a>
 </div>
+
+<?php if($value['author']) { ?>
+<a href="space.php?uid=<?=$value['authorid']?>" id="author_<?=$value['cid']?>"><?=$_SN[$value['authorid']]?></a> 
+<?php } else { ?>
+匿名
+<?php } ?>
+<span class="gray"><?php echo sgmdate('Y-m-d H:i',$value[dateline],1); ?></span>
+
+</div>
+
+<div class="detail<?php if($value['magicflicker']) { ?> magicflicker<?php } ?>" id="comment_<?=$value['cid']?>"><?=$value['message']?></div>
+
+<?php if(empty($ajax_edit)) { ?></li><?php } ?>
+<?php } } ?>
+
+<?php } elseif($op == 'getfriendgroup') { ?>
+<?=$group?>
+<?php } elseif($op == 'getfriendname') { ?>
+<?=$groupname?>
+<?php } elseif($op == 'getmtagmember') { ?>
+<?php if($tagspace['grade']==9) { ?>群主
+<?php } elseif($tagspace['grade']==8) { ?>副群主
+<?php } elseif($tagspace['grade']==1) { ?>明星
+<?php } elseif($tagspace['grade']==-1) { ?>待审核
+<?php } elseif($tagspace['grade']==-2) { ?>禁言
+<?php } else { ?>普通会员
+<?php } ?>
+
+<?php } elseif($op == 'post') { ?>
+
+<?php if(is_array($list)) { foreach($list as $value) { ?>
+<?php if(empty($ajax_edit)) { ?><div id="post_<?=$value['pid']?>_li"><?php } ?>
+<ul class="line_list">
+<li>
+<table width="100%">
+<tr>
+<td width="70" valign="top">
+<div class="avatar48"><a href="space.php?uid=<?=$value['uid']?>"><?php echo avatar($value[uid],small); ?></a></div>
+</td>
+<td>
+<div class="title">
+<div class="r_option">
+<?php if($mtag['grade']>=8 || $value['uid']==$_SGLOBAL['supe_uid'] || ($eventid && $userevent['status']>=3)) { ?>
+<a href="cp.php?ac=thread&op=edit&pid=<?=$value['pid']?>" id="p_<?=$value['pid']?>_edit" onclick="ajaxmenu(event, this.id, 1)">编辑</a>
+<a href="cp.php?ac=thread&op=delete&pid=<?=$value['pid']?>&tagid=<?=$thread['tagid']?>" id="p_<?=$value['pid']?>_delete" onclick="ajaxmenu(event, this.id)">删除</a>
+<?php } ?>
+<?php if($value['uid']!=$_SGLOBAL['supe_uid'] && (($mtag['allowpost'] && !$eventid) || ($eventid && $userevent['status']>1))) { ?><a href="cp.php?ac=thread&op=reply&pid=<?=$value['pid']?>" id="p_<?=$value['pid']?>_reply" onclick="ajaxmenu(event, this.id, 1)">回复</a> <?php } ?>
+<a href="cp.php?ac=common&op=report&idtype=post&id=<?=$value['pid']?>" id="a_report_<?=$value['pid']?>" onclick="ajaxmenu(event, this.id, 1)">举报</a>
+<span class="gray">#<?=$value['num']?></span>
+</div>
+<a href="space.php?uid=<?=$value['uid']?>"><?=$_SN[$value['uid']]?></a> 
+<span class="gray"><?php echo sgmdate('Y-m-d H:i',$value[dateline],1); ?></span>
+</div>
+<div class="detail" id="detail_<?=$value['pid']?>">
+<?=$value['message']?>
+<?php if($value['pic']) { ?><div><a href="<?=$value['pic']?>" target="_blank"><img src="<?=$value['pic']?>" class="resizeimg" /></a></div><?php } ?>
+</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<?php if(empty($ajax_edit)) { ?></div><?php } ?>
+<?php } } ?>
+
+<?php } elseif($op == 'share') { ?>
+
+<?php if(is_array($list)) { foreach($list as $value) { ?>
+<?php if(empty($ajax_edit)) { ?><li id="share_<?=$value['sid']?>_li"><?php } ?>
+<div class="title">
+<div class="r_option">
+<?php if($value['sid'] && ($_SGLOBAL['supe_uid'] == $value['uid'] || checkperm('manageshare'))) { ?>
+<a href="cp.php?ac=topic&op=join&id=<?=$value['sid']?>&idtype=sid" id="a_topicjoin_<?=$value['sid']?>" onclick="ajaxmenu(event, this.id)">凑热闹</a><span class="pipe">|</span>
+<?php } ?>
+<?php if($value['sid']) { ?><a href="space.php?uid=<?=$value['uid']?>&do=share&id=<?=$value['sid']?>">评论</a>&nbsp;<?php } ?>
+<?php if($value['uid']==$_SGLOBAL['supe_uid']) { ?><?php if($value['type']=='link' || 'video' == $value['type'] || 'music' == $value['type']) { ?><span class="pipe">|</span><?php } ?><a href="cp.php?ac=share&op=delete&sid=<?=$value['sid']?>" id="s_<?=$value['sid']?>_delete" onclick="ajaxmenu(event, this.id)">删除</a><?php } ?>
+</div>
+<a href="space.php?uid=<?=$value['uid']?>"><?=$_SN[$value['uid']]?></a> <a href="space.php?uid=<?=$value['uid']?>&do=share&id=<?=$value['sid']?>"><?=$value['title_template']?></a>
+&nbsp;<span class="gray"><?php echo sgmdate('Y-m-d H:i',$value[dateline],1); ?></span>
+</div>
+<div class="feed">
+<div style="width:100%;overflow:hidden;">
+<?php if($value['image']) { ?>
+<a href="<?=$value['image_link']?>"><img src="<?=$value['image']?>" class="summaryimg image" alt="" width="70" /></a>
+<?php } ?>
+<div class="detail">
+<?=$value['body_template']?>
+</div>
+<?php if('video' == $value['type']) { ?>
+<div class="media">
+<img src="image/vd.gif" alt="点击播放" onclick="javascript:showFlash('<?=$value['body_data']['host']?>', '<?=$value['body_data']['flashvar']?>', this, '<?=$value['sid']?>');" style="cursor:pointer;" />
+</div>
+<?php } elseif('music' == $value['type']) { ?>
+<div class="media">
+<img src="image/music.gif" alt="点击播放" onclick="javascript:showFlash('music', '<?=$value['body_data']['musicvar']?>', this, '<?=$value['sid']?>');" style="cursor:pointer;" />
+</div>
+<?php } elseif('flash' == $value['type']) { ?>
+<div class="media">
+<img src="image/flash.gif" alt="点击查看" onclick="javascript:showFlash('flash', '<?=$value['body_data']['flashaddr']?>', this, '<?=$value['sid']?>');" style="cursor:pointer;" />
+</div>
+<?php } ?>
+<div class="quote"><span id="quote" class="q"><?=$value['body_general']?></span></div>
+</div>
+</div>
+<?php if(empty($ajax_edit)) { ?></li><?php } ?>
+<?php } } ?>
+
+<?php } elseif($op == 'album') { ?>
+
+<table cellspacing="2" cellpadding="2">
+<tr>
+<?php if(is_array($piclist)) { foreach($piclist as $key => $value) { ?>
+<td><img src="<?=$value['pic']?>" width="60" onclick="insertImage('<?=$value['bigpic']?>');" style="cursor:hand;"></td>
+<?php if($key%5==4) { ?></tr><tr><?php } ?>
+<?php } } ?>
+</tr>
+</table>
+
+<div class="page"><?=$multi?></div>
+<?php } elseif($op == 'getreward') { ?>
+<?php if($rule['credit'] || $rule['experience']) { ?>
+<div class="popupmenu_layer">
+<p><?=$rule['rulename']?></p>
+<p class="btn_line">
+<?php if($rule['credit']) { ?>积分 <strong>+<?=$rule['credit']?></strong> <?php } ?>
+<?php if($rule['experience']) { ?>经验 <strong>+<?=$rule['experience']?></strong> <?php } ?>
+</p>
+<?php if($rule['cyclenum']) { ?>
+<p>
+本周期内，您还有 <?=$rule['cyclenum']?> 次机会
+</p>
+<?php } ?>
+</div>
+<?php } ?>
+<?php } ?>
+
 <?php if(empty($_SGLOBAL['inajax'])) { ?>
 <?php if(empty($_TPL['nosidebar'])) { ?>
 <?php if($_SGLOBAL['ad']['contentbottom']) { ?><br style="line-height:0;clear:both;"/><div id="ad_contentbottom"><?php adshow('contentbottom'); ?></div><?php } ?>
@@ -287,5 +450,4 @@ showreward();
 <?php } ?>
 </body>
 </html>
-<?php } ?>
-<?php ob_out();?>
+<?php } ?><?php ob_out();?>

@@ -11,7 +11,7 @@ $_SC['dbuser']  		= 'root'; //用户
 $_SC['dbpw'] 	 		= ''; //密码
 $_SC['dbcharset'] 		= 'utf8'; //字符集
 $_SC['pconnect'] 		= 0; //是否持续连接
-$_SC['dbname']  		= 'ey_uchome'; //数据库
+$_SC['dbname']  		= 'ey_uhome'; //数据库
 $_SC['tablepre'] 		= 'uchome_'; //表名前缀
 $_SC['charset'] 		= 'utf-8'; //页面字符集
 
@@ -34,18 +34,18 @@ $_SC['allowedittpl']	= 0; //是否允许在线编辑模板。为了服务器安�
 
 //应用的UCenter配置信息(可以到UCenter后台->应用管理->查看本应用->复制里面对应的配置信息进行替换)
 define('UC_CONNECT', 'mysql'); // 连接 UCenter 的方式: mysql/NULL, 默认为空时为 fscoketopen(), mysql 是直接连接的数据库, 为了效率, 建议采用 mysql
-define('UC_DBHOST', 'localhost'); // UCenter 数据库主机
+define('UC_DBHOST', 'localhost:/tmp/MySQL.sock'); // UCenter 数据库主机
 define('UC_DBUSER', 'root'); // UCenter 数据库用户名
 define('UC_DBPW', ''); // UCenter 数据库密码
-define('UC_DBNAME', 'ey_discuz'); // UCenter 数据库名称
+define('UC_DBNAME', 'discuz2'); // UCenter 数据库名称
 define('UC_DBCHARSET', 'utf8'); // UCenter 数据库字符集
-define('UC_DBTABLEPRE', '`ey_discuz`.cdb_uc_'); // UCenter 数据库表前缀
+define('UC_DBTABLEPRE', '`discuz2`.cdb_uc_'); // UCenter 数据库表前缀
 define('UC_DBCONNECT', '0'); // UCenter 数据库持久连接 0=关闭, 1=打开
-define('UC_KEY', '74naN4W8u2H4o3sbq8I201ne909f182970a4b0y677T0s7w3T2b4F6r31dy0D623'); // 与 UCenter 的通信密钥, 要与 UCenter 保持一致
-define('UC_API', 'http://localhost/~stainless/ey/uc_server'); // UCenter 的 URL 地址, 在调用头像时依赖此常量
+define('UC_KEY', 'Bc08g1Va85hcf1Qf06D9265cs94bFbHeO6edA1g6c4C3Ue52Gch0Gbs0u2l1S2Ld'); // 与 UCenter 的通信密钥, 要与 UCenter 保持一致
+define('UC_API', 'http://discuz2.local/uc_server'); // UCenter 的 URL 地址, 在调用头像时依赖此常量
 define('UC_CHARSET', 'utf-8'); // UCenter 的字符集
 define('UC_IP', '127.0.0.1'); // UCenter 的 IP, 当 UC_CONNECT 为非 mysql 方式时, 并且当前应用服务器解析域名有问题时, 请设置此值
-define('UC_APPID', '2'); // 当前应用的 ID
+define('UC_APPID', '3'); // 当前应用的 ID
 define('UC_PPP', 20);
 
 ?>

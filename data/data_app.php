@@ -5,15 +5,15 @@ $_SGLOBAL['app']=Array
 	1 => Array
 		(
 		'name' => 'Discuz! Board',
-		'url' => 'http://localhost/~stainless/ey',
+		'url' => 'http://discuz2.local',
 		'type' => 'DISCUZ',
 		'open' => 1,
 		'icon' => 'discuz'
 		),
-	2 => Array
+	3 => Array
 		(
 		'name' => '个人家园',
-		'url' => 'http://localhost/~stainless/uchome',
+		'url' => 'http://eyhome.local',
 		'type' => 'UCHOME',
 		'open' => '0',
 		'icon' => 'uchome'
