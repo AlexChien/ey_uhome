@@ -1,5 +1,13 @@
 ===修改记录
 
 template/default/header.htm
+去掉邀请，登录改为openid登录，注册链接改为通信证
+
+
 template/default/index.htm
 template/default/network.htm
+登录框改为openid登录
+
+
+template/default/space_feed.htm 
+去掉邀请
