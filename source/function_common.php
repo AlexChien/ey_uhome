@@ -1272,6 +1272,24 @@ function getpassport($username, $password) {
 	return $passport;
 }
 
+//内部不需密码获取ucenter用户信息
+function get_passport_by_login($userlogin) {
+	global $_SGLOBAL, $_SC;
+
+	$passport_info = array();
+	if(!@include_once S_ROOT.'./uc_client/client.php') {
+		showmessage('system_error');
+	}
+
+	$uc_result_info = uc_user_info_by_login($userlogin);
+	if($uc_result_info[0] > 0) {
+		$passport_info['uid'] = $uc_result_info[0];
+		$passport_info['username'] = $uc_result_info[1];
+		$passport_info['email'] = $uc_result_info[3];
+	}
+	return $passport_info;
+}
+
 //用户操作时间间隔检查
 function interval_check($type) {
 	global $_SGLOBAL, $space;

@@ -65,50 +65,7 @@ function setintro(type) {
 	
 	
 	<!-- 开始 openid登录框 -->
-<form method="post" name="login" id="loginform" class="gateform" onsubmit="submitLogin();" action="logging.php?action=login&amp;loginsubmit=yes&amp;floatlogin=yes">
-<h3 id="returnmessage">用户登录</h3>
-<input name="formhash" value="150129d4" type="hidden">
-<input name="referer" value="http://bbs.enjoyoung.cn/index.php" type="hidden">
-<div class="loginform nolabelform">
-<div class="selectinput" style="width: 245px;">
-<select onchange="onLoginTypeChange(this);" id="loginfield" style="float: left; width: 50px; display: none;" name="loginfield" selecti="0">
 
-
-
-<option value="openid"></option></select><a href="javascript:;" hidefocus="true" class="loadselect" id="loginfield_selectinput" onfocus="loadselect_keyinit(event, 1)" onblur="loadselect_keyinit(event, 2)" onmouseover="this.focus()" onmouseout="this.blur()" onkeyup="loadselect_key(this, event, 'loginfield', 'floatlayout_login')" onclick="loadselect_viewmenu(this, 'loginfield', 0, 'floatlayout_login');doane(event)" tabindex="1">星尚通行证</a><ul onfocus="loadselect_keyinit(event, 1)" onblur="loadselect_keyinit(event, 2)" class="newselect" id="loginfield_selectmenu" style="display: none;"><li class="current" k_id="loginfield" k_value="openid" onclick="loadselect_liset('loginfield', 0, 'loginfield','openid',this.innerHTML, 0)">星尚通行证</li><li k_id="loginfield" k_value="username" onclick="loadselect_liset('loginfield', 0, 'loginfield','username',this.innerHTML, 1)">用户名</li><li k_id="loginfield" k_value="uid" onclick="loadselect_liset('loginfield', 0, 'loginfield','uid',this.innerHTML, 2)">UID</li></ul>
-
-<input id="username" name="username" autocomplete="off" size="36" class="openid" tabindex="1" value="" type="text">
-<input name="openid_identifier" id="openid_identifier" type="hidden"> 
-</div>
-<p id="password_holder" class="selectinput loginpsw" style="display: none; width: 245px;">
-<label for="password3" style="width: 81px;">密　码　：</label>
-<input id="password3" name="password" onfocus="clearpwd()" onkeypress="detectcapslock(event, this)" size="36" class="txt" tabindex="1" style="width: 137px;" type="password">
-</p>
-<div id="selecttype" class="selecttype" style="display: none; width: 245px;">
-<select change="if($('questionid').value &gt; 0) {$('answer').style.display='';} else {$('answer').style.display='none';}" name="questionid" id="questionid" selecti="0" style="width: 0px; display: none;">
-
-
-
-
-
-
-
-<option value="0"></option></select><a style="display: none;" href="javascript:;" hidefocus="true" class="loadselect" id="questionid_selectinput" onfocus="loadselect_keyinit(event, 1)" onblur="loadselect_keyinit(event, 2)" onmouseover="this.focus()" onmouseout="this.blur()" onkeyup="loadselect_key(this, event, 'questionid', 'floatlayout_login')" onclick="loadselect_viewmenu(this, 'questionid', 0, 'floatlayout_login');doane(event)" tabindex="1">安全提问</a><ul onfocus="loadselect_keyinit(event, 1)" onblur="loadselect_keyinit(event, 2)" class="newselect" id="questionid_selectmenu" style="display: none;"><li class="current" k_id="questionid" k_value="0" onclick="loadselect_liset('questionid', 0, 'questionid','0',this.innerHTML, 0)">安全提问</li><li k_id="questionid" k_value="1" onclick="loadselect_liset('questionid', 0, 'questionid','1',this.innerHTML, 1)">母亲的名字</li><li k_id="questionid" k_value="2" onclick="loadselect_liset('questionid', 0, 'questionid','2',this.innerHTML, 2)">爷爷的名字</li><li k_id="questionid" k_value="3" onclick="loadselect_liset('questionid', 0, 'questionid','3',this.innerHTML, 3)">父亲出生的城市</li><li k_id="questionid" k_value="4" onclick="loadselect_liset('questionid', 0, 'questionid','4',this.innerHTML, 4)">您其中一位老师的名字</li><li k_id="questionid" k_value="5" onclick="loadselect_liset('questionid', 0, 'questionid','5',this.innerHTML, 5)">您个人计算机的型号</li><li k_id="questionid" k_value="6" onclick="loadselect_liset('questionid', 0, 'questionid','6',this.innerHTML, 6)">您最喜欢的餐馆名称</li><li k_id="questionid" k_value="7" onclick="loadselect_liset('questionid', 0, 'questionid','7',this.innerHTML, 7)">驾驶执照的最后四位数字</li></ul>
-</div>
-<p><input name="answer" id="answer" style="display: none;" autocomplete="off" size="36" class="txt" tabindex="1" type="text"></p>
-</div>
-<div class="logininfo multinfo">
-<h4>没有帐号？<a href="http://openid.enjoyoung.cn/account/new" onclick="window.location.href=\" http:="" openid.enjoyoung.cn="" account="" new\="" ;="" title="注册帐号">注册</a></h4>
-
-                    <!-- <p>忘记密码, <a href="javascript:;" onclick="display('loginform');display('loginfield_selectinput');pagescroll.right()" title="找回密码">找回密码</a></p> -->
-<p>忘记密码, <a href="javascript:;" onclick="window.location.href='http://openid.enjoyoung.cn/passwords/troubleshooting';" title="找回密码">找回密码</a></p>
-<p>无法登录，<a href="javascript:;" onclick="ajaxget('float_register.php?action=clearcookies&amp;formhash=150129d4', 'returnmessage2', 'returnmessage2');doane(event);" title="清除登录状态">清除登录状态</a></p>
-</div>
-<p class="fsubmit">
-<button class="submit" type="submit" name="loginsubmit" value="true" tabindex="1">登录</button>
-<input class="checkbox" name="cookietime" id="cookietime" tabindex="1" value="2592000" type="checkbox"> <label for="cookietime">记住我的登录状态</label>
-</p>
-</form>
 	<!-- 结束 openid登录框 -->
 	
 </div>
