@@ -1,5 +1,4 @@
 <?php
-
 require_once './common.php';
 require_once './config.php'; //uchome的配置信息
 
@@ -15,6 +14,6 @@ global $_SGLOBAL;
 $openidlang = $_SGLOBAL['openidlang'];
 
 //OpenID处理文件
-echo S_ROOT.'plugins/OpenIDoor/OpenID.inc.php'."<br/>";
+// echo S_ROOT.'plugins/OpenIDoor/OpenID.inc.php'."<br/>";
 include S_ROOT.'plugins/OpenIDoor/OpenID.inc.php';
 ?>

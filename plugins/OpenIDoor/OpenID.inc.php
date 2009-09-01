@@ -1,6 +1,6 @@
 <?php
 @session_start();
-echo dirname(__FILE__).DIRECTORY_SEPARATOR.'OpenID.cfg.php'."<br/>";
+// echo dirname(__FILE__).DIRECTORY_SEPARATOR.'OpenID.cfg.php'."<br/>";
 require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'OpenID.cfg.php');//引入配置文件
 
 include S_ROOT."/language/lang_openid_$langcharset.php" ;//语言包
@@ -49,8 +49,8 @@ if(!empty($openid_identifier)&&!empty($is_binding)){
 		// echo var_dump($username);
 		// 检查是否有邮件信息
 		$email=$_SESSION['openid_sreg']['email'];
-		echo var_dump($_SESSION['openid_sreg']['email'])."<br/>";
-		echo $email."<br/>";
+		// echo var_dump($_SESSION['openid_sreg']['email'])."<br/>";
+		// echo $email."<br/>";
 		if(empty($email)) {
 			showmessage('email_format_is_wrong');
 		}
@@ -71,7 +71,7 @@ if(!empty($openid_identifier)&&!empty($is_binding)){
 				if(!$passport = get_passport_by_login($username)) {
 					showmessage('login_failure_please_re_login', 'OpenID.call.php');
 				}
-				echo var_dump($passport)."<br/>";
+				// echo var_dump($passport)."<br/>";
 				$setarr = array(
 					'uid' => $passport['uid'],
 					'username' => addslashes($passport['username']),
@@ -108,8 +108,8 @@ function regiter_user_to_uchome($setarr, $openid_identifier){
 //	if(!$space = $_SGLOBAL['db']->fetch_array($query)) {
 		$space = space_open($setarr['uid'], $setarr['username'], 0, $email);
 //	}		
-	echo var_dump($query)."<br/>";
-	echo var_dump($space)."space"."<br/>";
+	// echo var_dump($query)."<br/>";
+	// echo var_dump($space)."space"."<br/>";
 	$_SGLOBAL['member'] = $space;
 
 	//实名
