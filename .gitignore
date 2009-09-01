@@ -1,0 +1,4 @@
+.project
+.cache
+data/*
+config.php

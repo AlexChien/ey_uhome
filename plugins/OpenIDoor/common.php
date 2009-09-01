@@ -1,3 +1,4 @@
+
 <?php
 set_include_path( dirname(__FILE__) . PATH_SEPARATOR . get_include_path() );
 
@@ -90,17 +91,20 @@ function getScheme() {
 }
 
 function getReturnTo() {
-    // return sprintf("%s://%s:%s%s/OpenID.php",
-    //                getScheme(), $_SERVER['SERVER_NAME'],
-    //                $_SERVER['SERVER_PORT'],
-    //                dirname($_SERVER['PHP_SELF']));
-    // return sprintf("%s://%s:%s/OpenID.php",
-    //                getScheme(), $_SERVER['SERVER_NAME'],
-    //                $_SERVER['SERVER_PORT']);
-    // return "http://localhost/~stainless/ey_uhome/OpenID.php";
-    return "http://home.enjoyoung.cn/OpenID.php";
+	// 如果部署在根路径
+	if (dirname($_SERVER['PHP_SELF']) == "/"){
+		return sprintf("%s://%s:%s/OpenID.php",
+			                   getScheme(), $_SERVER['SERVER_NAME'],
+			                   $_SERVER['SERVER_PORT']);
+	}
+	else{
+    return sprintf("%s://%s:%s%s/OpenID.php",
+                   getScheme(), $_SERVER['SERVER_NAME'],
+                   $_SERVER['SERVER_PORT'],
+                   dirname($_SERVER['PHP_SELF']));		
+	}
 }
-echo getReturnTo()."<br/>";
+
 
 function getTrustRoot() {
     return sprintf("%s://%s:%s%s",

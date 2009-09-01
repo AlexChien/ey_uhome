@@ -1,0 +1,3 @@
+===安装
+
+执行mysql.sql建立openid的三张表
