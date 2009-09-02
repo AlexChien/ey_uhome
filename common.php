@@ -23,11 +23,6 @@ if(!@include_once(S_ROOT.'./config.php')) {
 }
 include_once(S_ROOT.'./source/function_common.php');
 
-//openid语言包
-include(S_ROOT."/language/lang_openid_utf-8.php") ;//openid语言包
-//openid语言信息
-$openidlang = $_SGLOBAL['openidlang'];
-
 //时间
 $mtime = explode(' ', microtime());
 $_SGLOBAL['timestamp'] = $mtime[1];
