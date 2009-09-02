@@ -11,6 +11,14 @@
 <script language="javascript" type="text/javascript" src="source/script_ajax.js"></script>
 <script language="javascript" type="text/javascript" src="source/script_face.js"></script>
 <script language="javascript" type="text/javascript" src="source/script_manage.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+	// OpenID
+	function checkOpenIDFormat(){
+	var url = $('openid_input').value;	$('openid_identifier').value=(url.indexOf('http://')<0&&url.indexOf('https://')<0 ? 'http://openid.enjoyoung.cn/'+url : url);
+	}
+</script>
+
 <style type="text/css">
 @import url(template/default/style.css);
 <!--{if $_TPL['css']}-->
@@ -82,9 +90,9 @@ $_SGLOBAL[space_css]
 		<!--{else}-->
 			<a href="do.php?ac=$_SCONFIG[register_action]" class="login_thumb"><!--{avatar($_SGLOBAL[supe_uid])}--></a>
 			欢迎您<br>
-			<!-- <a href="do.php?ac=$_SCONFIG[login_action]">登录</a> |  -->
+			<!-- <a href="do.php?ac=$_SCONFIG[login_action]">登录</a> |  --> <!-- 原版登录 -->
 			<a href="OpenID.call.php">登录</a> | 
-			<!-- <a href="do.php?ac=$_SCONFIG[register_action]">注册</a> -->
+			<!-- <a href="do.php?ac=$_SCONFIG[register_action]">注册</a> --> <!-- 原版注册 -->
 			<a href="http://openid.enjoyoung.cn/account/new">注册</a>
 		<!--{/if}-->
 		</div>
@@ -139,19 +147,30 @@ $_SGLOBAL[space_css]
 		
 		<!--{else}-->
 			<div class="bar_text">
-				<form id="loginform" name="loginform" action="do.php?ac=$_SCONFIG[login_action]&ref" method="post">
-				<input type="hidden" name="formhash" value="<!--{eval echo formhash();}-->" />
-					<p class="title">登录站点</p>
-					<p>用户名</p>
-					<p><input type="text" name="username" id="username" class="t_input" size="15" value="" /></p>
-					<p>密码</p>
-					<p><input type="password" name="password" id="password" class="t_input" size="15" value="" /></p>
-					<p><input type="checkbox" id="cookietime" name="cookietime" value="315360000" checked /><label for="cookietime">记住我</label></p>
-					<p>
-						<input type="submit" id="loginsubmit" name="loginsubmit" value="登录" class="submit" />
-						<input type="button" name="regbutton" value="注册" class="button" onclick="urlto('do.php?ac=$_SCONFIG[register_action]');">
-					</p>
-				</form>
+				
+				<div style="height:50px;">
+				</div>
+				
+				<h3 class="ntitle">请登录</h3>
+				<div class="side_rbox_c">
+					<!--{if !$uid&&empty($is_binding)||$uid}-->
+					<form method="post" action="OpenID.php" onsubmit="checkOpenIDFormat();">
+						<label for="openid_input">星尚通行证</label>	
+						<input id="openid_input" name="openid_input" size="12" style='background: #FFFFFF url(image/login-bg.gif) no-repeat; padding-left: 10px;'/>
+						<input type="hidden" name="openid_identifier" value="" id="openid_identifier">
+						<br />	
+						<button class="submit" type="submit" onclick="document.getElementById('spinner').style.visibility='visible'">登录</button>
+						<br />	
+						<span id="spinner" style="visibility:hidden"> <img src="image/spinner.gif" /><span>$openidlang['openid_auth']</span></span>
+						<br />	
+						<ul>
+							<li>$openidlang['openid_intro']</li>
+							<li>$openidlang['openid_guide']</li>
+							<li>$openidlang['openid_sites']</li>
+						</ul>
+					</form>
+					<!--{/if}-->
+				</div>
 			</div>
 		<!--{/if}-->
 		</div>
