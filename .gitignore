@@ -1,4 +1,6 @@
 .project
 .cache
-data/*
+.settings
+data/tpl_cache/*
+data/log/*.php
 config.php
