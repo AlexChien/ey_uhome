@@ -4,7 +4,7 @@ $_SCONFIG=Array
 	(
 	'sitename' => '我的空间',
 	'template' => 'default',
-	'adminemail' => 'webmaster@eyhome.local',
+	'adminemail' => 'webmaster@localhost',
 	'onlinehold' => 1800,
 	'timeoffset' => 8,
 	'maxpage' => 100,
@@ -100,12 +100,13 @@ $_SCONFIG=Array
 			'click' => 1
 			)
 		),
-	'cronnextrun' => 1251713226,
+	'cronnextrun' => 1251905700,
 	'my_status' => '0',
 	'uniqueemail' => 1,
 	'updatestat' => 1,
 	'my_showgift' => 1,
 	'topcachetime' => 60,
-	'newspacenum' => 3
+	'newspacenum' => 3,
+	'sitekey' => 'a9f24622hGuGJm22'
 	)
 ?>
