@@ -10,7 +10,7 @@ if(!defined('IN_UCHOME')) {
 
 $siteurl = getsiteurl();
 
-$maxcount = 50;//×î¶àºÃÓÑÑûÇë
+$maxcount = 50;//æœ€å¤šå¥½å‹é‚€è¯·
 $reward = getreward('invitecode', 0);
 $appid = empty($_GET['app']) ? 0 : intval($_GET['app']);
 
@@ -32,7 +32,7 @@ $mailvar = array(
 	''
 );
 
-//È¡³öÏàÓ¦µÄÓ¦ÓÃ
+//å–å‡ºç›¸åº”çš„åº”ç”¨
 $appinfo = array();
 if($appid) {
 	$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('myapp')." WHERE appid='$appid'");
@@ -44,9 +44,9 @@ if($appid) {
 		$appid = 0;
 	}
 }
-//´¦ÀíÓÊ¼þÑûÇë
+//å¤„ç†é‚®ä»¶é‚€è¯·
 if(submitcheck('emailinvite')) {
-	set_time_limit(0);//ÉèÖÃ³¬Ê±Ê±¼ä
+	set_time_limit(0);//è®¾ç½®è¶…æ—¶æ—¶é—´
 	if($_SCONFIG['closeinvite']) {
 		showmessage('close_invite');
 	}
@@ -61,7 +61,7 @@ if(submitcheck('emailinvite')) {
 		}
 		
 		if($reward['credit']) {
-			//¼ÆËã»ý·Ö¿Û¼õ»ý·Ö
+			//è®¡ç®—ç§¯åˆ†æ‰£å‡ç§¯åˆ†
 			$credit = intval($reward['credit'])*($invitenum+1);
 			if(!isemail($value) || ($reward['credit'] && $credit > $space['credit'])) {
 				$failingmail[] = $value;
@@ -77,14 +77,16 @@ if(submitcheck('emailinvite')) {
 			);
 			$id = inserttable('invite', $setarr, 1);
 			if($id) {
-				$mailvar[4] = "{$siteurl}invite.php?{$id}{$code}{$inviteapp}";
+				// $mailvar[4] = "{$siteurl}invite.php?{$id}{$code}{$inviteapp}";
+				$mailvar[4] = "http://openid.enjoyoung.cn/account/new?{$id}{$code}{$inviteapp}";
 				createmail($value, $mailvar);
 				$invitenum++;
 			} else {
 				$failingmail[] = $value;
 			}
 		} else {
-			$mailvar[4] = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
+			// $mailvar[4] = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
+			$mailvar[4] = "http://openid.enjoyoung.cn/account/new?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
 			if($appid) {
 				$mailvar[6] = $appinfo['appname'];
 			}
@@ -111,9 +113,11 @@ if($_GET['op'] == 'resend') {
 		$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('invite')." WHERE id='$id' AND uid='$_SGLOBAL[supe_uid]' ORDER BY id DESC");
 		if($value = $_SGLOBAL['db']->fetch_array($query)) {
 			if($reward['credit']) {
-				$inviteurl = "{$siteurl}invite.php?{$value[id]}{$value[code]}";
+				// $inviteurl = "{$siteurl}invite.php?{$value[id]}{$value[code]}";
+				$inviteurl = "http://openid.enjoyoung.cn/account/new?{$value[id]}{$value[code]}";
 			} else {
-				$inviteurl = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code";
+				// $inviteurl = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code";
+				$inviteurl = "http://openid.enjoyoung.cn/account/new?u=$space[uid]&amp;c=$invite_code";
 			}
 			$mailvar[4] = $inviteurl;
 			createmail($value['email'], $mailvar);
@@ -149,9 +153,11 @@ if($_GET['op'] == 'resend') {
 			$flist[] = $value;
 		} else {
 			if($reward['credit']) {
-				$inviteurl = "{$siteurl}invite.php?{$value[id]}{$value[code]}";
+				// $inviteurl = "{$siteurl}invite.php?{$value[id]}{$value[code]}";
+				$inviteurl = "http://openid.enjoyoung.cn/account/new?{$value[id]}{$value[code]}";
 			} else {
-				$inviteurl = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
+				// $inviteurl = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
+				$inviteurl = "http://openid.enjoyoung.cn/account/new?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
 			}
 			if($value['type']) {
 				$maillist[] = array(
@@ -160,7 +166,7 @@ if($_GET['op'] == 'resend') {
 					'id' => $value['id']
 				);
 			} else {
-				$list[] = $inviteurl;//Ã»ÓÐ·¢ËÍµÄ
+				$list[] = $inviteurl;//æ²¡æœ‰å‘é€çš„
 				$count++;
 			}
 		}
@@ -169,9 +175,11 @@ if($_GET['op'] == 'resend') {
 	if($inviteurl) {
 		$mailvar[4] = $inviteurl;
 	} elseif($reward['credit']) {
-		$mailvar[4] = "{$siteurl}invite.php?{$value[id]}{xxxxxx}";
+		// $mailvar[4] = "{$siteurl}invite.php?{$value[id]}{xxxxxx}";
+		$mailvar[4] = "http://openid.enjoyoung.cn/account/new?{$value[id]}{xxxxxx}";
 	} else {
-		$mailvar[4] = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
+		// $mailvar[4] = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
+		$mailvar[4] = "http://openid.enjoyoung.cn/account/new?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
 	}
 	
 	realname_get();
@@ -184,14 +192,14 @@ if($_GET['op'] == 'resend') {
 		if($maxinvitenum > $maxcount_my) $maxinvitenum = $maxcount_my;
 		if($maxinvitenum < 0) $maxinvitenum = 0;
 		
-		//Ìá½»
+		//æäº¤
 		if(submitcheck('invitesubmit')) {
 			if($_SCONFIG['closeinvite']) {
 				showmessage('close_invite');
 			}
 			$invitenum = intval($_POST['invitenum']);
 			if($invitenum > $maxinvitenum) $invitenum = $maxinvitenum;
-			//¿Û¼õ»ý·Ö
+			//æ‰£å‡ç§¯åˆ†
 			$credit = intval($reward['credit'])*$invitenum;
 			if(empty($invitenum) || ($reward['credit'] && $credit > $space['credit'])) {
 				showmessage('invite_error');
