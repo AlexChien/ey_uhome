@@ -1,7 +1,9 @@
 <?php
-@session_start();
+@session_start();//开始记录session信息
+
 // echo dirname(__FILE__).DIRECTORY_SEPARATOR.'OpenID.cfg.php'."<br/>";
 require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'OpenID.cfg.php');//引入配置文件
+//echo var_dump($_SCONFIG['sitekey']).'--sitekey1234<br>';
 
 // include(S_ROOT."/language/lang_openid_$langcharset.php");//语言包
 
@@ -9,13 +11,64 @@ $openid_identifier = $_SESSION['openid_identifier'];//记下OpenID URL方便使�
 
 $lang_login_add = $openidlang['openid_login'];
 
-// if(!empty($uid))
-// 	$lang_login_add = $openidlang['openid_add'];
+/////////////////////////////////////
+//好友邀请数据预处理
+include_once(S_ROOT.'./source/function_cp.php');
+$uid = empty($_GET['uid'])?0:intval($_GET['uid']);
+$code = empty($_GET['code'])?'':$_GET['code'];
+$app = empty($_GET['app'])?'':intval($_GET['app']);
+$invite = empty($_GET['invite'])?'':$_GET['invite'];
+$invitearr = array();
+$reward = getreward('invitecode', 0);
+$pay = $app ? 0 : $reward['credit'];
 
+if($uid && $code && !$pay) {//邀请玩应用home就不给奖励了？
+	$m_space = getspace($uid);//$_SN在此被赋值
+	// echo var_dump($_SN)."--_SN在getspace这个函数中赋值了...<br>";
+	$_SESSION['SN'] = $_SN;//后续函数内部需要这个全局变量,将其放入session供后续调用...
+	// echo var_dump($_SESSION['SN'])."--_SESSION['SN']<br>";
+	// echo var_dump($m_space['uid'])."--m_space['uid']<br>";	
+	// echo var_dump($app)."--app<br>";
+	// echo var_dump($code)."--code<br>";	
+	// echo var_dump($_SCONFIG['sitekey']).'--sitekey<br>';
+	// echo space_key($m_space, $app)."--space_key<br>";	
+	if($code == space_key($m_space, $app)) {//验证通过
+		$invitearr['uid'] = $uid;
+		$invitearr['username'] = $m_space['username'];
+	}
+	$url_plus = "uid=$uid&app=$app&code=$code";
+	// echo var_dump($uid)."--uid<br>";
+	// echo var_dump($m_space['username'])."--m_space['username']<br>";
+	// echo var_dump($invitearr)."--_invitearr1<br>";
+	// echo var_dump($url_plus)."--url_plus1<br>";
+} elseif($uid && $invite) {
+	include_once(S_ROOT.'./source/function_cp.php');
+	$invitearr = invite_get($uid, $invite);
+	$url_plus = "uid=$uid&invite=$invite";
+	// echo var_dump($invitearr)."--_invitearr2<br>";
+}
+
+$jumpurl = $app?"userapp.php?id=$app&my_extra=invitedby_bi_{$uid}_{$code}&my_suffix=Lw%3D%3D":'space.php?do=home';
+
+$_SESSION['invitearr'] = $invitearr;//将已有帐户登录时的邀请信息放到会话里，不用发到通行证
+$_SESSION['url_plus'] = $url_plus;//将已有帐户登录时的邀请信息放到会话里，不用发到通行证
+$_SESSION['app'] = $app;//将已有帐户登录时的邀请信息放到会话里，不用发到通行证
+$_SESSION['jumpurl'] = $jumpurl;
+
+// echo var_dump($invitearr)."--_invitearr<br>";
+// echo var_dump($_SESSION['invitearr'])."--_SESSION['invitearr']<br>";
+// echo var_dump($_SESSION['url_plus'])."--_SESSION['url_plus']<br>";
+// echo var_dump($_SESSION['jumpurl'])."--_SESSION['jumpurl']<br>";
+
+// 3分钟内
 $is_binding = 0;
 if(time()-$_SESSION['openid_binding']<180)
 	$is_binding = 1;
+	
+	// breakpoint();
 
+/////////////////////////////////////////////
+// 去掉人工取消绑定，未来可能加入绑定时选择冲突的ucenter用户名的逻辑
 // if($_GET['openid_action']=='cancel')//取消绑定
 // {
 // 	$_SESSION['openid_binding'] = 0;
@@ -29,9 +82,10 @@ if(time()-$_SESSION['openid_binding']<180)
 //	$db->query("DELETE FROM {$tablepre}user_openids WHERE uid = $uid AND id IN ($str)");
 //}
 
+//////////////////////////////////////////	
 // 将绑定现有uid改为注册新uid并关联到openid
 // 开始注册uchome本地用户并绑定openid操作
-// if(!empty($openid_identifier)&&!empty($is_binding)&&$uid){
+
 if(!empty($openid_identifier)&&!empty($is_binding)){
 	$_SESSION['openid_binding'] = 0;//标记绑定完成
 	
@@ -75,7 +129,7 @@ if(!empty($openid_identifier)&&!empty($is_binding)){
 				);
 				// echo var_dump($setarr)."--setarr<br/>";
 				// echo var_dump($email)."--email<br/>";
-				regiter_user_to_uchome($setarr, $email, $openid_identifier, $_SGLOBAL['db']);
+				regiter_user_to_uchome();
 			} 
 			elseif($newuid == -4) {showmessage('email_format_is_wrong');} 
 			elseif($newuid == -5) {showmessage('email_not_registered');}
@@ -89,42 +143,52 @@ if(!empty($openid_identifier)&&!empty($is_binding)){
 				'username' => $username,
 				'password' => md5("$newuid|$_SGLOBAL[timestamp]")//本地密码随机生成
 			);
-			regiter_user_to_uchome($setarr, $email, $openid_identifier, $_SGLOBAL['db']);
+			regiter_user_to_uchome();
 		}
 	}
 }
 
-function regiter_user_to_uchome($setarr, $email, $openid_identifier, $uc_db){
-	// echo var_dump($_SCONFIG)."--_SCONFIG6<br/>";
- 	// echo var_dump($uc_db)."--uc_db6<br/>";	
-	// include('./common.php');
-	// include_once(S_ROOT.'./source/function_common.php');
-	// echo include(S_ROOT.'./source/function_cp.php');
-	// echo './common.php'."--common.php<br>";
-	// echo S_ROOT.'./source/function_space.php'."--function_space.php<br>";
+/////////////////////////////////////
+// 将openid用户注册到uchome
+function regiter_user_to_uchome(){
+	global $_SCONFIG, $_SGLOBAL, $_SN, $openid_identifier, $setarr, $email;
+	// echo var_dump($_SCONFIG)."--_SCONFIG<br/>";
+ 	// echo var_dump($_SGLOBAL)."--_SGLOBAL<br/>";
+	// echo var_dump($setarr)."--setarr<br/>";
+	
+	$invitearr = $_SESSION['invitearr'];//从会话里将已有帐户登录时的邀请信息取出，不用从通行证返回信息里取
+	$url_plus = $_SESSION['url_plus'];//从会话里将已有帐户登录时的邀请信息取出，不用从通行证返回信息里取
+	$app = $_SESSION['app'];//从会话里将已有帐户登录时的邀请信息取出，不用从通行证返回信息里取
+	$_SN = $_SESSION['SN'];//从会话里取出后边要用的这个变量
+	
+	// echo var_dump($invitearr)."--invitearr<br>";
+	// echo var_dump($url_plus)."--url_plus<br>";
+	// echo var_dump($app)."--app<br>";
+	// echo var_dump($_SN)."--_SN1<br>";
+	// echo var_dump($_SESSION['jumpurl'])."--_SESSION['jumpurl']<br/>";
 	
 	//开通空间
-	// echo var_dump($_SCONFIG)."--_SCONFIG<br/>";
-	// echo var_dump($_SCONFIG)."--_SCONFIG<br/>";
 	// echo var_dump($_SGLOBAL['db'])."--_SGLOBAL['db']<br/>";
-	$query_uid = $uc_db->query("SELECT * FROM ".tname('space')." WHERE uid='$setarr[uid]'");
-	// echo var_dump($query_uid)."--$query_uid<br/>";
+	$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('space')." WHERE uid='$setarr[uid]'");
+	// echo var_dump($query)."--query<br/>";
 	
 	include(S_ROOT.'./source/function_space.php');
-	if(!$space = $uc_db->fetch_array($query_uid)) {
+	if(!$space = $_SGLOBAL['db']->fetch_array($query)) {
 		$space = space_open($setarr['uid'], $setarr['username'], 0, $email);
 	}		
 	// echo var_dump($space)."--space<br/>";
 	// breakpoint();
 	$_SGLOBAL['member'] = $space;
 	// echo var_dump($_SGLOBAL['member'])."--_SGLOBAL['member']<br/>";
-	
+
 	//实名
-	realname_set($space['uid'], $space['username'], $space['name'], $space['namestatus']);
+	realname_set($space['uid'], $space['username'], $space['name'], $space['namestatus']);//这里$_SN再次被赋值
+	
+	// echo var_dump($_SN)."--_SNn2<br>";
 
 	//检索当前用户
-	$query = $uc_db->query("SELECT password FROM ".tname('member')." WHERE uid='$setarr[uid]'");
-	if($value = $uc_db->fetch_array($query)) {
+	$query = $_SGLOBAL['db']->query("SELECT password FROM ".tname('member')." WHERE uid='$setarr[uid]'");
+	if($value = $_SGLOBAL['db']->fetch_array($query)) {
 		$setarr['password'] = addslashes($value['password']);
 	} else {
 		//更新本地用户库
@@ -178,19 +242,20 @@ function regiter_user_to_uchome($setarr, $email, $openid_identifier, $uc_db){
 	ssetcookie('loginuser', $username, 31536000);
 	ssetcookie('_refer', '');
 
-	//同步登录
-	if($_SCONFIG['uc_status']) {
-		include_once S_ROOT.'./uc_client/client.php';
-		$ucsynlogin = uc_user_synlogin($setarr['uid']);
-	} else {
-		$ucsynlogin = '';
-	}
-
+	// echo var_dump($invitearr)."--invitearr<br/>";	
 	//好友邀请
 	if($invitearr) {
 		//成为好友
 		invite_update($invitearr['id'], $setarr['uid'], $setarr['username'], $invitearr['uid'], $invitearr['username'], $app);
+		//统计更新
+		include_once(S_ROOT.'./source/function_cp.php');
+		if($app) {
+			updatestat('appinvite');
+		} else {
+			updatestat('invite');
+		}
 	}
+
 	$_SGLOBAL['supe_uid'] = $space['uid'];
 	//判断用户是否设置了头像
 	$reward = $setarr = array();
@@ -217,21 +282,16 @@ function regiter_user_to_uchome($setarr, $email, $openid_identifier, $uc_db){
 		}
 	}
 
-	if($setarr) {
-		$_SGLOBAL['db']->query("UPDATE ".tname('space')." SET ".implode(',', $setarr)." WHERE uid='$space[uid]'");
-	}
+	//变更记录
+	if($_SCONFIG['my_status']) inserttable('userlog', array('uid'=>$newuid, 'action'=>'add', 'dateline'=>$_SGLOBAL['timestamp']), 0, true);
 
-	if(empty($_POST['refer'])) {
-		$_POST['refer'] = 'space.php?do=home';
-	}
+	// echo var_dump($_SESSION['jumpurl'])."--_SESSION['jumpurl']<br/>";
+	// breakpoint();
 
-	realname_get();
-
-	showmessage('login_success', $app?"userapp.php?id=$app":$_POST['refer'], 1, array($ucsynlogin));			
+	showmessage('login_success',  "http://localhost/".$_SESSION['jumpurl']);			
 }
 
-
-
+/////////////////////////////////////
 // 去除显示绑定记录的页面和逻辑
 //if($uid)//显示当前绑定记录
 //{
