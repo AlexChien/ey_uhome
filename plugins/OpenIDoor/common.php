@@ -1,4 +1,3 @@
-
 <?php
 set_include_path( dirname(__FILE__) . PATH_SEPARATOR . get_include_path() );
 
@@ -92,7 +91,7 @@ function getScheme() {
 
 function getReturnTo() {
 	// 如果部署在根路径
-	if (dirname($_SERVER['PHP_SELF']) == "/"){
+	if (dirname($_SERVER['PHP_SELF']) == "/" && $_SERVER['SERVER_PORT']==80){//返回80端口时safari会提示404错误
 		return sprintf("%s://%s:%s/OpenID.php",
 			                   getScheme(), $_SERVER['SERVER_NAME'],
 			                   $_SERVER['SERVER_PORT']);
@@ -112,5 +111,5 @@ function getTrustRoot() {
                    $_SERVER['SERVER_PORT'],
                    dirname($_SERVER['PHP_SELF']));
 }
-echo getTrustRoot();
+
 ?>
