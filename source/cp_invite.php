@@ -77,16 +77,16 @@ if(submitcheck('emailinvite')) {
 			);
 			$id = inserttable('invite', $setarr, 1);
 			if($id) {
-				// $mailvar[4] = "{$siteurl}invite.php?{$id}{$code}{$inviteapp}";
-				$mailvar[4] = "http://openid.enjoyoung.cn/account/new?{$id}{$code}{$inviteapp}";
+				$mailvar[4] = "{$siteurl}invite.php?{$id}{$code}{$inviteapp}";
+				// $mailvar[4] = "http://openid.enjoyoung.cn/account/new?{$id}{$code}{$inviteapp}&amp;renturn_to=uchome";
 				createmail($value, $mailvar);
 				$invitenum++;
 			} else {
 				$failingmail[] = $value;
 			}
 		} else {
-			// $mailvar[4] = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
-			$mailvar[4] = "http://openid.enjoyoung.cn/account/new?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
+			$mailvar[4] = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
+			// $mailvar[4] = "http://openid.enjoyoung.cn/account/new?u=$space[uid]&amp;c=$invite_code{$inviteapp}&amp;renturn_to=uchome";
 			if($appid) {
 				$mailvar[6] = $appinfo['appname'];
 			}
@@ -113,11 +113,11 @@ if($_GET['op'] == 'resend') {
 		$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('invite')." WHERE id='$id' AND uid='$_SGLOBAL[supe_uid]' ORDER BY id DESC");
 		if($value = $_SGLOBAL['db']->fetch_array($query)) {
 			if($reward['credit']) {
-				// $inviteurl = "{$siteurl}invite.php?{$value[id]}{$value[code]}";
-				$inviteurl = "http://openid.enjoyoung.cn/account/new?{$value[id]}{$value[code]}";
+				$inviteurl = "{$siteurl}invite.php?{$value[id]}{$value[code]}";
+				// $inviteurl = "http://openid.enjoyoung.cn/account/new?{$value[id]}{$value[code]}&amp;renturn_to=uchome";
 			} else {
-				// $inviteurl = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code";
-				$inviteurl = "http://openid.enjoyoung.cn/account/new?u=$space[uid]&amp;c=$invite_code";
+				$inviteurl = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code";
+				// $inviteurl = "http://openid.enjoyoung.cn/account/new?u=$space[uid]&amp;c=$invite_code&amp;renturn_to=uchome";
 			}
 			$mailvar[4] = $inviteurl;
 			createmail($value['email'], $mailvar);
@@ -153,11 +153,11 @@ if($_GET['op'] == 'resend') {
 			$flist[] = $value;
 		} else {
 			if($reward['credit']) {
-				// $inviteurl = "{$siteurl}invite.php?{$value[id]}{$value[code]}";
-				$inviteurl = "http://openid.enjoyoung.cn/account/new?{$value[id]}{$value[code]}";
+				$inviteurl = "{$siteurl}invite.php?{$value[id]}{$value[code]}";
+				// $inviteurl = "http://openid.enjoyoung.cn/account/new?{$value[id]}{$value[code]}&amp;renturn_to=uchome";
 			} else {
-				// $inviteurl = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
-				$inviteurl = "http://openid.enjoyoung.cn/account/new?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
+				$inviteurl = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
+				// $inviteurl = "http://openid.enjoyoung.cn/account/new?u=$space[uid]&amp;c=$invite_code{$inviteapp}&amp;renturn_to=uchome";
 			}
 			if($value['type']) {
 				$maillist[] = array(
@@ -175,11 +175,11 @@ if($_GET['op'] == 'resend') {
 	if($inviteurl) {
 		$mailvar[4] = $inviteurl;
 	} elseif($reward['credit']) {
-		// $mailvar[4] = "{$siteurl}invite.php?{$value[id]}{xxxxxx}";
-		$mailvar[4] = "http://openid.enjoyoung.cn/account/new?{$value[id]}{xxxxxx}";
+		$mailvar[4] = "{$siteurl}invite.php?{$value[id]}{xxxxxx}";
+		// $mailvar[4] = "http://openid.enjoyoung.cn/account/new?{$value[id]}{xxxxxx}&amp;renturn_to=uchome";
 	} else {
-		// $mailvar[4] = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
-		$mailvar[4] = "http://openid.enjoyoung.cn/account/new?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
+		$mailvar[4] = "{$siteurl}invite.php?u=$space[uid]&amp;c=$invite_code{$inviteapp}";
+		// $mailvar[4] = "http://openid.enjoyoung.cn/account/new?u=$space[uid]&amp;c=$invite_code{$inviteapp}&amp;renturn_to=uchome";
 	}
 	
 	realname_get();
