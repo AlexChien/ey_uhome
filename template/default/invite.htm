@@ -47,9 +47,11 @@
 				</form>
 			<!--{else}-->
 				<!--{if empty($_SCONFIG['closeinvite'])}-->
-				<a href="do.php?ac=$_SCONFIG[register_action]&$url_plus" class="submit">接受邀请，我要注册</a>
+				<!-- <a href="do.php?ac=$_SCONFIG[register_action]&$url_plus" class="submit">接受邀请，我要注册</a> -->
+				<a href="http://openid.enjoyoung.cn/account/new?$url_plus&return_to=uchome" class="submit">接受邀请，我要注册</a>
 				<!--{/if}-->
-				<a href="do.php?ac=$_SCONFIG[login_action]&$url_plus" class="submit">马上登录</a>
+				<!-- <a href="do.php?ac=$_SCONFIG[login_action]&$url_plus" class="submit">马上登录</a> -->
+				<a href="OpenID.call.php?$url_plus" class="submit">马上登录</a>
 			<!--{/if}-->
 				</p>
 			</td>

@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=$_SC[charset]" />
 <meta http-equiv="x-ua-compatible" content="ie=7" />
-<title><!--{if $_TPL['titles']}--><!--{loop $_TPL['titles'] $value}--><!--{if $value}-->$value - <!--{/if}--><!--{/loop}--><!--{/if}--><!--{if $_SN[$space[uid]]}-->{$_SN[$space[uid]]} - <!--{/if}-->$_SCONFIG[sitename] - Powered by UCenter Home</title>
+<title><!--{if $_TPL['titles']}--><!--{loop $_TPL['titles'] $value}--><!--{if $value}-->$value - <!--{/if}--><!--{/loop}--><!--{/if}--><!--{if $_SN[$space[uid]]}-->{$_SN[$space[uid]]} - <!--{/if}-->$_SCONFIG[sitename]</title>
 <script language="javascript" type="text/javascript" src="source/script_cookie.js"></script>
 <script language="javascript" type="text/javascript" src="source/script_common.js"></script>
 <script language="javascript" type="text/javascript" src="source/script_menu.js"></script>
@@ -81,7 +81,7 @@ $_SGLOBAL[space_css]
 			<!--{/if}-->
 			<br />
 			<!--{if empty($_SCONFIG['closeinvite'])}-->
-			<!-- <a href="cp.php?ac=invite">邀请</a>  -->
+			<a href="cp.php?ac=invite">邀请</a> 
 			<!--{/if}-->
 			<a href="cp.php?ac=task">任务</a> 
 			<a href="cp.php?ac=magic">道具</a>

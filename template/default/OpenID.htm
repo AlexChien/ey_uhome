@@ -2,7 +2,7 @@
 <!--{template header}-->
 
 <!--{if !$uid&&empty($is_binding)||$uid}-->
-<form method="post" action="OpenID.php" onsubmit="checkOpenIDFormat();" class="c_form">
+<form method="post" action="OpenID.php?$url_plus" onsubmit="checkOpenIDFormat();" class="c_form">
 	<table cellspacing="0" cellpadding="0" class="formtable">
 		<caption>
 			<h2>请使用星尚通行证登录</h2>
@@ -10,6 +10,15 @@
 		</caption>
 		
 		<tbody>
+			<!--{if $invitearr}-->
+			<tr>
+				<th width="100">好友邀请</th>
+				<td>
+					<a href="space.php?$url_plus" target="_blank"><!--{avatar($invitearr[uid],small)}--></a>
+					<a href="space.php?$url_plus" target="_blank">{$invitearr['username']}</a>
+				</td>
+			</tr>
+			<!--{/if}-->			
 		<tr>
 			<th width="100"><label for="openid_input">星尚通行证</label></th>
 			<td>			
