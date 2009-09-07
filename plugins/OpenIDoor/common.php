@@ -92,9 +92,8 @@ function getScheme() {
 function getReturnTo() {
 	// 如果部署在根路径
 	if (dirname($_SERVER['PHP_SELF']) == "/" && $_SERVER['SERVER_PORT']==80){//返回80端口时safari会提示404错误
-		return sprintf("%s://%s:%s/OpenID.php",
-			                   getScheme(), $_SERVER['SERVER_NAME'],
-			                   $_SERVER['SERVER_PORT']);
+		return sprintf("%s://%s/OpenID.php",
+			                   getScheme(), $_SERVER['SERVER_NAME']);
 	}
 	else{
     return sprintf("%s://%s:%s%s/OpenID.php",
