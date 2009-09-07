@@ -84,6 +84,8 @@ if($isfounder || $megroup['managename'] || $megroup['managespacegroup'] || $megr
 	$menus[1]['space'] = 1;
 }
 
+$needlogin = false;
+
 //二次登录确认(半个小时)
 if($needlogin) {
 	$cpaccess = 0;
