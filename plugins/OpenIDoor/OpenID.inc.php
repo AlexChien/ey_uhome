@@ -288,7 +288,7 @@ function regiter_user_to_uchome(){
 	// echo var_dump($_SESSION['jumpurl'])."--_SESSION['jumpurl']<br/>";
 	// breakpoint();
 
-	showmessage('login_success',  "http://localhost/".$_SESSION['jumpurl']);			
+	showmessage('login_success', $_SESSION['jumpurl']);			
 }
 
 /////////////////////////////////////
