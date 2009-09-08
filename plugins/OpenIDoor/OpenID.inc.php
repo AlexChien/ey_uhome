@@ -94,7 +94,26 @@ if(!empty($openid_identifier)&&!empty($is_binding)){
 	else{
 		// 此处为注册新uid逻辑
 	    // OpenID客户端从通行证取回的用户信息
-		$username = $_SESSION['openid_sreg']['nickname'];
+		// $username = $_SESSION['openid_sreg']['nickname'];//不能以nickname注册，必须以星尚通行证的login注册
+		
+		// echo var_dump($openid_identifier)."---openid_identifier<br>";
+		$pieces=explode("http://openid.enjoyoung.cn/", $openid_identifier);//线上运营
+		// $pieces=explode("http://localhost/", $openid_identifier);//本地开发
+		// echo var_dump($pieces[0])."---pieces[0]<br>";
+		// echo var_dump($pieces[1])."---pieces[1]<br>";
+		
+		if($login = $pieces[1]){
+			$username = $login;
+		} else {
+			// echo var_dump($pieces[0])."---pieces[0]<br>";
+			// echo var_dump($pieces[1])."---pieces[1]<br>";
+			// breakpoint();
+			showmessage('only_xingshang');
+		}
+		
+		// echo var_dump($login)."---login<br>";
+		// breakpoint();
+		
 		// echo var_dump($username);
 		// 检查是否有邮件信息
 		$email=$_SESSION['openid_sreg']['email'];

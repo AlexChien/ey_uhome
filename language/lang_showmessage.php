@@ -14,7 +14,7 @@ $_SGLOBAL['msglang'] = array(
 
 	//OpenID　相关提示消息
 	'cancel_openid_auth'=>'验证被取消。',
-	''=>'',
+	'only_xingshang'=>'暂不支持非星尚通行证的openid登录本站。',
 	''=>'',
 	''=>'',
 	''=>'',
