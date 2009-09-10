@@ -78,13 +78,14 @@ $_SGLOBAL['cplang'] = array(
 	'share_comment_reply' => '\\1 回复了你的分享评论',
 	'event_comment_reply' => '\\1 回复了你的活动评论',
 
-	'invite_subject' => '\\1邀请您加入\\2，并成为TA的好友',
+	'invite_subject' => '[星尚传媒]\\1邀请您加入\\2，并成为TA的好友',
 	'invite_massage' => '<table border="0">
 		<tr>
 		<td valign="top">\\1</td>
 		<td valign="top">
-		<h3>Hi，我是\\2，在\\3上建立了个人主页，邀请您也加入并成为我的好友</h3><br>
-		请加入到我的好友中，你就可以通过我的个人主页了解我的近况，分享我的照片，随时与我保持联系<br>
+		<h3>我是\\2，星尚你知道哇？星尚呀！就是SMG星尚频道呀！俗话说，没有知识，也要有常识，没有常识也要看电视，看电视只看星尚频道嘛！哈哈，我在星尚网·\\3上建立了个人地盘，邀请你也加入并成为我的好友。</h3>
+
+		请加入到我的好友中，你就可以通过我的一区了解我的时尚，分享我的美食，随时与我一起high。知道嘛，来这里比开心更开心！<br>
 		<br>
 		邀请附言：<br>
 		\\4
@@ -92,16 +93,16 @@ $_SGLOBAL['cplang'] = array(
 		<strong>请你点击以下链接，接受好友邀请：</strong><br>
 		<a href="\\5">\\5</a><br>
 		<br>
-		<strong>如果你拥有\\3上面的账号，请点击以下链接查看我的个人主页：</strong><br>
+		<strong>如果你拥有星尚网·\\3上面的账号，请点击以下链接查看我的个人主页：</strong><br>
 		<a href="\\6">\\6</a><br>
 		</td></tr></table>',
 
-	'app_invite_subject' => '\\1邀请您加入\\2，一起来玩\\3',
+	'app_invite_subject' => '[星尚传媒]\\1邀请您加入\\2，一起来玩\\3',
 	'app_invite_massage' => '<table border="0">
 		<tr>
 		<td valign="top">\\1</td>
 		<td valign="top">
-		<h3>Hi，我是\\2，在\\3上玩 \\7，邀请您也加入一起玩</h3><br>
+		<h3>我是\\2，在星尚网·\\3上玩 \\7，邀请您也加入一起玩</h3><br>
 		<br>
 		邀请附言：<br>
 		\\4
