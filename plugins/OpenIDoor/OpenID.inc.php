@@ -226,7 +226,7 @@ function regiter_user_to_uchome(){
 
 	//默认好友
 	$flog = $inserts = $fuids = $pokes = array();
-	echo var_dump($_SCONFIG['defaultfusername'])."--_SCONFIG['defaultfusername']<br/>";
+	// echo var_dump($_SCONFIG['defaultfusername'])."--_SCONFIG['defaultfusername']<br/>";
 	if(!empty($_SCONFIG['defaultfusername'])) {
 		$query = $_SGLOBAL['db']->query("SELECT uid,username FROM ".tname('space')." WHERE username IN (".simplode(explode(',', $_SCONFIG['defaultfusername'])).")");
 		while ($value = $_SGLOBAL['db']->fetch_array($query)) {
