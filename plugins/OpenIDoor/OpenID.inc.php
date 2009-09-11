@@ -97,8 +97,8 @@ if(!empty($openid_identifier)&&!empty($is_binding)){
 		// $username = $_SESSION['openid_sreg']['nickname'];//不能以nickname注册，必须以星尚通行证的login注册
 		
 		// echo var_dump($openid_identifier)."---openid_identifier<br>";
-		$pieces=explode("http://openid.enjoyoung.cn/", $openid_identifier);//线上运营
-		// $pieces=explode("http://localhost/", $openid_identifier);//本地开发
+		// $pieces=explode("http://openid.enjoyoung.cn/", $openid_identifier);//线上运营
+		$pieces=explode("http://localhost/", $openid_identifier);//本地开发
 		// echo var_dump($pieces[0])."---pieces[0]<br>";
 		// echo var_dump($pieces[1])."---pieces[1]<br>";
 		
@@ -170,7 +170,7 @@ if(!empty($openid_identifier)&&!empty($is_binding)){
 /////////////////////////////////////
 // 将openid用户注册到uchome
 function regiter_user_to_uchome(){
-	global $_SCONFIG, $_SGLOBAL, $_SN, $openid_identifier, $setarr, $email;
+	global $_SCONFIG, $_SGLOBAL, $_SN, $openid_identifier, $setarr, $email, $username, $newuid;
 	// echo var_dump($_SCONFIG)."--_SCONFIG<br/>";
  	// echo var_dump($_SGLOBAL)."--_SGLOBAL<br/>";
 	// echo var_dump($setarr)."--setarr<br/>";
@@ -226,6 +226,7 @@ function regiter_user_to_uchome(){
 
 	//默认好友
 	$flog = $inserts = $fuids = $pokes = array();
+	echo var_dump($_SCONFIG['defaultfusername'])."--_SCONFIG['defaultfusername']<br/>";
 	if(!empty($_SCONFIG['defaultfusername'])) {
 		$query = $_SGLOBAL['db']->query("SELECT uid,username FROM ".tname('space')." WHERE username IN (".simplode(explode(',', $_SCONFIG['defaultfusername'])).")");
 		while ($value = $_SGLOBAL['db']->fetch_array($query)) {
