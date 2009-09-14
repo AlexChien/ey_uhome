@@ -43,7 +43,12 @@ $_SGLOBAL[space_css]
 	<div id="header">
 	<!--{if $_SGLOBAL['ad']['header']}--><div id="ad_header"><!--{ad/header}--></div><!--{/if}-->
 	<div class="headerwarp">
-		<h1 class="logo"><a href="index.php"><img src="template/$_SCONFIG[template]/image/logo.gif" alt="$_SCONFIG[sitename]" /></a></h1>
+		<h1 class="logo">
+			<a href="index.php">
+				<img src="template/$_SCONFIG[template]/image/logo.gif" alt="$_SCONFIG[sitename]" />
+				<span id="beta">Beta</span>	
+			</a>		
+		</h1>
 		<ul class="menu">
 		<!--{if $_SGLOBAL[supe_uid]}-->
 			<li><a href="space.php?do=home">首页</a></li>

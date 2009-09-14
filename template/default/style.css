@@ -563,8 +563,10 @@ a.button { padding: 5px; }
 
 .searchfriend .avatar_list li{ padding: 7px; }
 .atitle{ padding: 10px; background: #FCF9E6; }
-#header .logo a{ width:85px; height:40px; display:block; background:transparent url(image/logo.gif) no-repeat scroll left center; overflow:hidden; }
-#header .logo a img{ margin: -200px; }
+#beta{position:absolute;top:5px;left:240px;}
+#header .logo a{ width:85px; height:40px; display:inline;  overflow:hidden; }
+/*#header .logo a{ width:85px; height:40px; display:block; background:transparent url(image/logo.gif) no-repeat scroll left center; overflow:hidden; }*/
+/*#header .logo a img{ margin: -200px; }*/
 
 	.photolist div a img{ max-width: 180px; max-height: 120px; zoom: expression( function(elm) { if (elm.width > 180 || elm.height > 120 ){ if (elm.width>elm.height) { elm.width=180; } else{ elm.height=120; } } elm.style.zoom = '1'; }(this) ); }
 
