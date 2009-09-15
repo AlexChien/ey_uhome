@@ -8,13 +8,20 @@ if(!defined('IN_UCHOME')) {
 	exit('Access Denied');
 }
 
-//»¥·Ã¿¨
+//äº’è®¿å¡
 if(submitcheck("usesubmit")) {
 	
-	//Ëæ»úÑ¡³ö×î¶à 10 ¸öºÃÓÑ
+	//æŸ¥è¯¢å®žå
+	$uid = $_SGLOBAL[supe_uid];
+	$query = $_SGLOBAL['db']->query("SELECT uid, name, namestatus FROM ".tname('space')." WHERE uid='$uid'");
+	if($value = $_SGLOBAL['db']->fetch_array($query)) {
+		$name = addslashes($value['name']);
+	}
+	
+	//éšæœºé€‰å‡ºæœ€å¤š 10 ä¸ªå¥½å‹
 	$count = count($space['friends']);
 	if(!$count) {
-		showmessage("magicuse_has_no_valid_friend");//µÀ¾ßÊ¹ÓÃÊ§°Ü£¬»¹Ã»ÓÐºÃÓÑ
+		showmessage("magicuse_has_no_valid_friend");//é“å…·ä½¿ç”¨å¤±è´¥ï¼Œè¿˜æ²¡æœ‰å¥½å‹
 	} elseif($count == 1) {
 		$fids = array($space['friends'][0]);
 	} else {
@@ -28,7 +35,7 @@ if(submitcheck("usesubmit")) {
 	
 	$inserts = array();
 	if($_POST['visitway'] == 'poke') {
-		//´òÕÐºô
+		//æ‰“æ‹›å‘¼
 		$note = '';
 		$icon = intval($_POST['visitpoke']);
 		foreach ($fids as $fid) {
@@ -44,7 +51,7 @@ if(submitcheck("usesubmit")) {
 		$_SGLOBAL['db']->query('UPDATE '.tname('space').' SET pokenum = pokenum + 1 WHERE uid IN ('.simplode($ids).')');
 		
 	} elseif($_POST['visitway'] == 'comment') {
-		//ÁôÑÔ
+		//ç•™è¨€
 		$message = getstr($_POST['visitmsg'], 255, 1, 1, 1);
 		$ip = getonlineip();
 		$note_inserts = array();
@@ -58,16 +65,16 @@ if(submitcheck("usesubmit")) {
 		$_SGLOBAL['db']->query('UPDATE '.tname('space')." SET notenum = notenum + 1 WHERE uid IN (".simplode($fids).")");
 		
 	} else {
-		//·ÃÎÊ¿Õ¼ä
+		//è®¿é—®ç©ºé—´
 		foreach ($fids as $fid) {
-			$inserts[] = "('$fid', '$_SGLOBAL[supe_uid]', '$_SGLOBAL[supe_username]', '$_SGLOBAL[timestamp]')";
+			$inserts[] = "('$fid', '$_SGLOBAL[supe_uid]', '$_SGLOBAL[supe_username]', '$_SGLOBAL[timestamp]', '$name')";
 		}
-		$_SGLOBAL['db']->query('REPLACE INTO '.tname('visitor')."(uid, vuid, vusername, dateline) VALUES ".implode(",",$inserts));
+		$_SGLOBAL['db']->query('REPLACE INTO '.tname('visitor')."(uid, vuid, vusername, dateline, vname) VALUES ".implode(",",$inserts));
 	}
 	
 	magic_use($mid, array(), 1);
 	
-	//ÏÔÊ¾
+	//æ˜¾ç¤º
 	$users = array();
 	$query = $_SGLOBAL['db']->query('SELECT * FROM '.tname('member')." WHERE uid IN (".simplode($fids).")");
 	while ($value = $_SGLOBAL['db']->fetch_array($query)) {

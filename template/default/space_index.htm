@@ -419,7 +419,10 @@
 					<p class="gray"><!--{date('n月j日',$value[dateline],1)}--></p>
 					<!--{else}-->
 					<div class="avatar48"><a href="space.php?uid=$value[vuid]"><!--{avatar($value[vuid],small)}--></a></div>
-					<p<!--{if $ols[$value[vuid]]}--> class="online_icon_p"<!--{/if}-->><a href="space.php?uid=$value[vuid]" title="{$_SN[$value[vuid]]}">{$_SN[$value[vuid]]}</a></p>
+					<p<!--{if $ols[$value[vuid]]}--> class="online_icon_p"<!--{/if}-->>
+					<a href="space.php?uid=$value[vuid]" title="{$_SN[$value[vuid]]}">{$_SN[$value[vuid]]}</a>
+					</p>
+				<!--{if $value[vname]}--><p style='margin-top:-8px;'><abbr title="$value[vname]">$value[vname]</abbr></p><!--{/if}-->
 					<p class="gray"><!--{date('n月j日',$value[dateline],1)}--></p>
 					<!--{/if}-->
 				</li>
@@ -441,7 +444,10 @@
 				<!--{loop $friendlist $value}-->
 				<li>
 				<div class="avatar48"><a href="space.php?uid=$value[fuid]"><!--{avatar($value[fuid],small)}--></a></div>
-				<p<!--{if $ols[$value[fuid]]}--> class="online_icon_p"<!--{/if}-->><a href="space.php?uid=$value[fuid]">{$_SN[$value[fuid]]}</a></p>
+				<p<!--{if $ols[$value[fuid]]}--> class="online_icon_p"<!--{/if}-->>
+					<a href="space.php?uid=$value[fuid]">{$_SN[$value[fuid]]}</a>
+				</p>
+				<!--{if $value[fname]}--><p style='margin-top:-8px;'><abbr title='$value[fname]'>$value[fname]</abbr></p><!--{/if}-->
 				</li>
 				<!--{/loop}-->
 			</ul>

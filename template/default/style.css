@@ -563,6 +563,7 @@ a.button { padding: 5px; }
 
 .searchfriend .avatar_list li{ padding: 7px; }
 .atitle{ padding: 10px; background: #FCF9E6; }
+#image-beta{float:left;top:5px;margin-left:-48px; display:inline; background:transparent url(image/beta.gif) no-repeat}
 #beta{float:left;top:5px;margin-left:-48px; display:inline;}
 #header .logo a{ width:85px; height:40px; display:block; background:transparent url(image/logo.gif) no-repeat scroll left center; overflow:hidden; }
 #header .logo a img{ margin: -200px; }
