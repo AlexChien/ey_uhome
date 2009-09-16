@@ -412,7 +412,7 @@
 			</h2>
 			<ul class="avatar_list">
 				<!--{loop $visitorlist $key $value}-->
-				<li>
+				<li class='fixheight'>
 					<!--{if $value[vusername] == ''}-->
 					<div class="avatar48"><img src="image/magic/hidden.gif" alt="匿名" /></div>
 					<p>匿名</p>
@@ -422,8 +422,8 @@
 					<p<!--{if $ols[$value[vuid]]}--> class="online_icon_p"<!--{/if}-->>
 					<a href="space.php?uid=$value[vuid]" title="{$_SN[$value[vuid]]}">{$_SN[$value[vuid]]}</a>
 					</p>
-				<!--{if $value[vname]}--><p style='margin-top:-8px;'><abbr title="$value[vname]">$value[vname]</abbr></p><!--{/if}-->
-					<p class="gray"><!--{date('n月j日',$value[dateline],1)}--></p>
+				<!--{if $value[vname]}--><p class="tighter"><abbr title="$value[vname]">$value[vname]</abbr></p><!--{/if}-->
+					<p class="gray tight"><!--{date('n月j日',$value[dateline],1)}--></p>
 					<!--{/if}-->
 				</li>
 				<!--{/loop}-->
@@ -442,12 +442,12 @@
 			</h2>
 			<ul class="avatar_list">
 				<!--{loop $friendlist $value}-->
-				<li>
+				<li class="fixheight">
 				<div class="avatar48"><a href="space.php?uid=$value[fuid]"><!--{avatar($value[fuid],small)}--></a></div>
 				<p<!--{if $ols[$value[fuid]]}--> class="online_icon_p"<!--{/if}-->>
 					<a href="space.php?uid=$value[fuid]">{$_SN[$value[fuid]]}</a>
 				</p>
-				<!--{if $value[fname]}--><p style='margin-top:-8px;'><abbr title='$value[fname]'>$value[fname]</abbr></p><!--{/if}-->
+				<!--{if $value[fname]}--><p class='tighter'><abbr title='$value[fname]'>$value[fname]</abbr></p><!--{/if}-->
 				</li>
 				<!--{/loop}-->
 			</ul>

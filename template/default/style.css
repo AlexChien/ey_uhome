@@ -21,6 +21,10 @@ caption, th { text-align: left; }
 .avatar48 { padding: 5px 0 0 5px; width: 55px; height: 55px; background: url(image/48_avatar_bg.gif) no-repeat; }
   .avatar48 img { width: 48px; height: 48px; }
 
+.fixheight{height:100px;}
+.tight {margin-top:-4px;}
+.tighter {margin-top:-8px;font-size:10px;}
+
 .threadimg60 { padding: 5px 0 0 5px; width: 67px; height: 67px; background: url(image/60_threadimg_bg.gif) no-repeat; }
     .threadimg60 img { width: 60px; height: 60px; }
 

@@ -104,7 +104,14 @@ function insertsession($setarr) {
 			$setarr['magichidden'] = '1';
 		}
 	}
-
+	
+	//查询实名
+	$uid = $setarr[uid];
+	$query = $_SGLOBAL['db']->query("SELECT uid, name, namestatus FROM ".tname('space')." WHERE uid='$uid'");
+	if($value = $_SGLOBAL['db']->fetch_array($query)) {
+		$setarr['name'] = addslashes($value['name']);
+	}
+	
 	inserttable('session', $setarr, 0, true, 1);
 
 	$spacearr = array(

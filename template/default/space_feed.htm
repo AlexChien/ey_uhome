@@ -233,10 +233,11 @@
 		</h2>
 		<ul class="avatar_list">
 			<!--{loop $newspacelist $key $value}-->
-			<li>
+			<li class="fixheight">
 				<div class="avatar48"><a href="space.php?uid=$value[uid]"><!--{avatar($value[uid],small)}--></a></div>
 				<p<!--{if $ols[$value[uid]]}--> class="online_icon_p" title="在线"<!--{/if}-->><a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}">{$_SN[$value[uid]]}</a></p>
-				<p class="gray"><!--{date('n月j日',$value[dateline],1)}--></p>
+				<!--{if $value[name]}--><p class="tighter"><abbr title='$value[name]'>$value[name]</abbr></p><!--{/if}-->				
+				<p class="gray tight"><!--{date('n月j日',$value[dateline],1)}--></p>
 			</li>
 			<!--{/loop}-->
 		</ul>
@@ -256,15 +257,18 @@
 		</h2>
 		<ul class="avatar_list">
 			<!--{loop $visitorlist $key $value}-->
-			<li>
+			<li class="fixheight">
 				<!--{if $value[vusername] == ''}-->
 				<div class="avatar48"><img src="image/magic/hidden.gif" alt="匿名" /></a></div>
 				<p>匿名</p>
 				<p class="gray"><!--{date('n月j日',$value[dateline],1)}--></p>
 				<!--{else}-->
 				<div class="avatar48"><a href="space.php?uid=$value[vuid]"><!--{avatar($value[vuid],small)}--></a></div>
-				<p<!--{if $ols[$value[vuid]]}--> class="online_icon_p" title="在线"<!--{/if}-->><a href="space.php?uid=$value[vuid]" title="{$_SN[$value[vuid]]}">{$_SN[$value[vuid]]}</a></p>
-				<p class="gray"><!--{date('n月j日',$value[dateline],1)}--></p>
+				<p<!--{if $ols[$value[vuid]]}--> class="online_icon_p" title="在线"<!--{/if}-->>
+					<a href="space.php?uid=$value[vuid]" title="{$_SN[$value[vuid]]}">{$_SN[$value[vuid]]}</a>
+				</p>
+				<!--{if $value[vname]}--><p class="tighter"><abbr title='$value[vname]'>$value[vname]</abbr></p><!--{/if}-->				
+				<p class="gray tight"><!--{date('n月j日',$value[dateline],1)}--></p>
 				<!--{/if}-->
 			</li>
 			<!--{/loop}-->
@@ -285,10 +289,11 @@
 		</h2>
 		<ul class="avatar_list">
 			<!--{loop $olfriendlist $key $value}-->
-			<li>
+			<li class="fixheight">
 				<div class="avatar48"><a href="space.php?uid=$value[uid]"><!--{avatar($value[uid],small)}--></a></div>
 				<p<!--{if $ols[$value[uid]]}--> class="online_icon_p" title="在线"<!--{/if}-->><a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}">{$_SN[$value[uid]]}</a></p>
-				<p class="gray"><!--{if $value[lastactivity]}--><!--{date('H:i',$value[lastactivity],1)}--><!--{else}-->热度($value[num])<!--{/if}--></p>
+				<!--{if $value[name]}--><p class="tighter"><abbr title='$value[name]'>$value[name]</abbr></p><!--{/if}-->											
+				<p class="gray tight"><!--{if $value[lastactivity]}--><!--{date('H:i',$value[lastactivity],1)}--><!--{else}-->热度($value[num])<!--{/if}--></p>
 			</li>
 			<!--{/loop}-->
 		</ul>
@@ -309,7 +314,7 @@
 				<td style="padding-left:10px;">
 				<ul>
 				<!--{loop $values $value}-->
-				<li><a href="space.php?uid=$value[uid]">{$_SN[$value[uid]]}</a></li>
+				<li><a href="space.php?uid=$value[uid]">{$_SN[$value[uid]]}($value[name])</a></li>
 				<!--{/loop}-->
 				</ul>
 				</td>
