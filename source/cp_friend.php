@@ -72,21 +72,7 @@ if($op == 'add') {
 				if($tospace['videostatus']) {
 					ckvideophoto('friend', $tospace);
 				}
-				
-//				$setarr = array();
-				
-//				$query = $_SGLOBAL['db']->query("SELECT uid, name, namestatus FROM ".tname('space')." WHERE uid='$uid'");
-//				if($value = $_SGLOBAL['db']->fetch_array($query)) {
-//					$setarr['fname'] = addslashes($value['name']);
-//				}
-//				
-//				realname_set($uid,$tospace['username']);
-//				realname_get();
-				
-//				echo var_dump($setarr['fname'])."---setarr['fname']<br>";
-				
-//				breakpoint();
-				
+
 				//添加单向好友
 				if(submitcheck('addsubmit')) {
 					$setarr = array(
@@ -123,8 +109,13 @@ if($op == 'add') {
 			if(submitcheck('add2submit')) {
 				//成为好友
 				$gid = intval($_POST['gid']);
+				//查询好友实名
+				$query = $_SGLOBAL['db']->query("SELECT uid, name, namestatus FROM ".tname('space')." WHERE uid='$uid'");
+				if($value = $_SGLOBAL['db']->fetch_array($query)) {
+					$fname = addslashes($value['name']);
+				}
 
-				friend_update($space['uid'], $space['username'], $tospace['uid'], $tospace['username'], 'add', $gid);
+				friend_update($space['uid'], $space['username'], $tospace['uid'], $tospace['username'], 'add', $gid, $fname);
 
 				//事件发布
 				//加好友不发布事件
@@ -323,7 +314,7 @@ if($op == 'add') {
 	$i = 0;
 	$friendlist = array();
 	if($space['feedfriend']) {
-		$query = $_SGLOBAL['db']->query("SELECT fuid AS uid, fusername AS username FROM ".tname('friend')."
+		$query = $_SGLOBAL['db']->query("SELECT fuid AS uid, fusername AS username,fname AS name FROM ".tname('friend')."
 			WHERE uid IN (".$space['feedfriend'].") LIMIT 0,200");
 		while ($value = $_SGLOBAL['db']->fetch_array($query)) {
 			if(!in_array($value['uid'], $nouids) && $value['username']) {
@@ -463,6 +454,12 @@ if($op == 'add') {
 			LIMIT $start,$perpage");
 		while ($value = $_SGLOBAL['db']->fetch_array($query)) {
 			realname_set($value['uid'], $value['username']);
+			//查询好友实名
+			$uid=$value[uid];
+			$query = $_SGLOBAL['db']->query("SELECT uid, name, namestatus FROM ".tname('space')." WHERE uid='$uid'");
+			if($value = $_SGLOBAL['db']->fetch_array($query)) {
+				$name = addslashes($value['name']);
+			}				
 			//共有的好友
 			$cfriend = array();
 			$friend2 = empty($value['friend'])?array():explode(',',$value['friend']);

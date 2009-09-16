@@ -7,7 +7,7 @@
 		<td>
 			<h2>
 				<!--{if $ols[$value[uid]]}--><img src="image/online_icon.gif" align="absmiddle"> <!--{/if}-->
-				<a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}"<!--{eval g_color($value[groupid]);}-->>{$_SN[$value[uid]]}</a>
+				<a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}"<!--{eval g_color($value[groupid]);}-->>{$_SN[$value[uid]]}<!--{if $value[name]}-->({$value[name]})<!--{/if}--></a>
 				<!--{if $value['username'] && $_SN[$value[uid]]!=$value['username']}--><span class="gray">($value[username])</span><!--{/if}-->
 				<!--{eval g_icon($value[groupid]);}-->
 				<!--{if $value['videostatus']}-->

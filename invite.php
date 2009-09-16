@@ -72,13 +72,21 @@ if(submitcheck('invitesubmit')) {
 
 //好友列表
 $flist = array();
-$query = $_SGLOBAL['db']->query("SELECT fuid AS uid, fusername AS username FROM ".tname('friend')." WHERE uid='$invite[uid]' AND status='1' ORDER BY num DESC, dateline DESC LIMIT 0,12");
+$query = $_SGLOBAL['db']->query("SELECT fuid AS uid, fusername AS username, fname AS name FROM ".tname('friend')." WHERE uid='$invite[uid]' AND status='1' ORDER BY num DESC, dateline DESC LIMIT 0,12");
 while ($value = $_SGLOBAL['db']->fetch_array($query)) {
 	realname_set($value['uid'], $value['username']);
 	$flist[] = $value;
 }
 
 realname_get();
+
+//查询实名
+$uid = $space['uid'];
+$query = $_SGLOBAL['db']->query("SELECT uid, name, namestatus FROM ".tname('space')." WHERE uid='$uid'");
+if($value = $_SGLOBAL['db']->fetch_array($query)) {
+	$name = addslashes($value['name']);
+}
+
 
 $albumnum = $_SGLOBAL['db']->result($_SGLOBAL['db']->query("SELECT COUNT(*) FROM ".tname('album')." WHERE uid='$invite[uid]'"), 0);
 $doingnum = $_SGLOBAL['db']->result($_SGLOBAL['db']->query("SELECT COUNT(*) FROM ".tname('doing')." WHERE uid='$invite[uid]'"), 0);

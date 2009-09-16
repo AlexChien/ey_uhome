@@ -142,7 +142,7 @@
 				<div class="avatar48"><a href="space.php?uid=$value[uid]"><!--{avatar($value[uid],small)}--></a></div>
 				<div class="thumbTitle">
 				<p<!--{if $ols[$value[uid]]}--> class="online_icon_p"<!--{/if}-->>
-					<a href="space.php?uid=$value[uid]"<!--{eval g_color($value[groupid]);}-->>{$_SN[$value[uid]]}</a> 
+					<a href="space.php?uid=$value[uid]"<!--{eval g_color($value[groupid]);}-->>{$_SN[$value[uid]]}<!--{if $value[name]}-->({$value[name]})<!--{/if}--></a> 
 					<!--{eval g_icon($value[groupid]);}-->
 					<!--{if $value['videostatus']}-->
 					<img src="image/videophoto.gif" align="absmiddle">

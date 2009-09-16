@@ -55,10 +55,11 @@
 	<h2 class="l_status title">惊喜，他们就在您的附近</h2>
 	<ul class="avatar_list">
 		<!--{loop $nearlist $key $value}-->
-		<li>
+		<li class="fixheight">
 			<div class="avatar48"><a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}" target="_blank"><!--{avatar($value[uid],small)}--></a></div>
 			<p><a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}">{$_SN[$value[uid]]}</a></p>
-			<p class="gray"><a href="cp.php?ac=friend&op=add&uid=$value[uid]" id="a_near_friend_$key" onclick="ajaxmenu(event, this.id, 1)" class="addfriend">加为好友</a></p>
+			<!--{if $value[name]}--><p class="tighter"><abbr title='$value[name]'>$value[name]</abbr></p><!--{/if}-->			
+			<p class="gray tighter"><a href="cp.php?ac=friend&op=add&uid=$value[uid]" id="a_near_friend_$key" onclick="ajaxmenu(event, this.id, 1)" class="addfriend">加为好友</a></p>
 		</li>
 		<!--{/loop}-->
 	</ul>
@@ -70,10 +71,11 @@
 	<h2 class="l_status title">他们是您的好友的好友，您也可能认识</h2>
 	<ul class="avatar_list">
 		<!--{loop $friendlist $key $value}-->
-		<li>
+		<li class="fixheight">
 			<div class="avatar48"><a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}" target="_blank"><!--{avatar($value[uid],small)}--></a></div>
 			<p><a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}">{$_SN[$value[uid]]}</a></p>
-			<p class="gray"><a href="cp.php?ac=friend&op=add&uid=$value[uid]" id="a_friend_friend_$key" onclick="ajaxmenu(event, this.id, 1)" class="addfriend">加为好友</a></p>
+			<!--{if $value[name]}--><p class="tighter"><abbr title='$value[name]'>$value[name]</abbr></p><!--{/if}-->				
+			<p class="gray tighter"><a href="cp.php?ac=friend&op=add&uid=$value[uid]" id="a_friend_friend_$key" onclick="ajaxmenu(event, this.id, 1)" class="addfriend">加为好友</a></p>
 		</li>
 		<!--{/loop}-->
 	</ul>
@@ -85,10 +87,11 @@
 	<h2 class="l_status title">他们当前正在线，加为好友就可以互动啦</h2>
 	<ul class="avatar_list">
 		<!--{loop $onlinelist $key $value}-->
-		<li>
+		<li class="fixheight">
 			<div class="avatar48"><a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}" target="_blank"><!--{avatar($value[uid],small)}--></a></div>
 			<p><a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}">{$_SN[$value[uid]]}</a></p>
-			<p class="gray"><a href="cp.php?ac=friend&op=add&uid=$value[uid]" id="a_online_friend_$key" onclick="ajaxmenu(event, this.id, 1)" class="addfriend">加为好友</a></p>
+			<!--{if $value[name]}--><p class="tighter"><abbr title='$value[name]'>$value[name]</abbr></p><!--{/if}-->			
+			<p class="gray tighter"><a href="cp.php?ac=friend&op=add&uid=$value[uid]" id="a_online_friend_$key" onclick="ajaxmenu(event, this.id, 1)" class="addfriend">加为好友</a></p>
 		</li>
 		<!--{/loop}-->
 	</ul>
@@ -697,7 +700,7 @@ function showtbody(id) {
 				</td>
 				<td>
 					<h6 class="l_status">
-						<a href="space.php?uid=$value[uid]">{$_SN[$value[uid]]}</a>
+						<a href="space.php?uid=$value[uid]">{$_SN[$value[uid]]}<!--{if $name}-->({$name})<!--{/if}--></a>
 						<!--{if $value['videostatus']}-->
 						<img src="image/videophoto.gif" align="absmiddle"> <span class="gray">已通过视频认证</span>
 						<!--{/if}-->
@@ -737,9 +740,10 @@ function showtbody(id) {
 	<div class="h_status">最多显示15位共同的好友</div>
 	<ul class="avatar_list">
 		<!--{loop $list $key $value}-->
-		<li>
+		<li class=fixheight>
 			<div class="avatar48"><a href="space.php?uid=$value[uid]"><!--{avatar($value[uid],small)}--></a></div>
 			<p><a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}">{$_SN[$value[uid]]}</a></p>
+			<!--{if $value[name]}--><p class="tighter"><abbr title='$value[name]'>$value[name]</abbr></p><!--{/if}-->
 		</li>
 		<!--{/loop}-->
 	</ul>

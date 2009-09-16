@@ -14,7 +14,7 @@
 	<table cellpadding="2" cellspacing="2" width="100%">
 	<tr>
 	<td>
-		<strong>欢迎您，<a href="space.php?$url_plus" target="_blank">{$_SN[$space[uid]]}</a> 热情邀请您为好友<!--{if $userapp}-->，并一起玩 $userapp[appname]<!--{/if}-->。</strong>
+		<strong>欢迎您，<a href="space.php?$url_plus" target="_blank">{$_SN[$space[uid]]}<!--{if $name}-->({$name})<!--{/if}--></a> 热情邀请您为好友<!--{if $userapp}-->，并一起玩 $userapp[appname]<!--{/if}-->。</strong>
 		<br>成为好友后，您们就可以一起讨论话题，及时关注对方的更新，还可以玩有趣的游戏 $userapp[appname] ...
 		<br>您也可以方便快捷地发布自己的日志、上传图片、记录生活点滴与好友分享。
 		<br><b>更主要的是第一时间获得“星尚”官方优惠体验！</b>
@@ -34,8 +34,8 @@
 			</div></div></div></div>
 			</td>
 			<td>
-				<h6 class="l_status"><a href="space.php?$url_plus">{$_SN[$space[uid]]}</a></h6>
-				<p>来自 $space[resideprovince] $space[residecity]</p>
+				<h6 class="l_status"><a href="space.php?$url_plus">{$_SN[$space[uid]]}<!--{if $name}-->({$name})<!--{/if}--></a></h6>
+				<!--{if $space[resideprovince]}--><p>来自 $space[resideprovince] $space[residecity]</p><!--{/if}-->
 				<p>已有 $space[friendnum] 个好友, $albumnum 个相册, $doingnum 条记录, $blognum 篇日志, $threadnum 个话题, $tagspacenum 个群组</p>
 				<!--{if $space[note]}--><div class="quote"><span id="quote" class="q">$space[note]</span></div><!--{/if}-->
 				<p style="padding-top:1em;">
@@ -66,9 +66,10 @@
 		<h2 class="title">{$_SN[$space[uid]]}的好友们</h2>
 		<ul class="avatar_list">
 			<!--{loop $flist $key $value}-->
-			<li>
+			<li class="fixheight">
 				<div class="avatar48"><a href="space.php?uid=$value[uid]"><!--{avatar($value[uid],small)}--></a></div>
 				<p><a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}">{$_SN[$value[uid]]}</a></p>
+				<!--{if $value[name]}--><p class="tighter"><abbr title='$value[name]'>$value[name]</abbr></p><!--{/if}-->						
 			</li>
 			<!--{/loop}-->
 		</ul>
