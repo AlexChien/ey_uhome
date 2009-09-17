@@ -106,6 +106,13 @@ if($_GET['op'] == 'base') {
 				}
 			}
 			updatetable('space', $setarr, array('uid'=>$_SGLOBAL['supe_uid']));
+			
+			//同时更新各个修改后涉及到实名的表
+			$_SGLOBAL['db']->query("UPDATE ".tname('friend')." SET fname='$setarr[name]' WHERE fuid=$_SGLOBAL[supe_uid]");
+			$_SGLOBAL['db']->query("UPDATE ".tname('visitor')." SET vname='$setarr[name]' WHERE vuid=$_SGLOBAL[supe_uid]");
+			$_SGLOBAL['db']->query("UPDATE ".tname('session')." SET name='$setarr[name]' WHERE uid=$_SGLOBAL[supe_uid]");
+			$_SGLOBAL['db']->query("UPDATE ".tname('invite')." SET fname='$setarr[name]' WHERE fuid=$_SGLOBAL[supe_uid]");
+			$_SGLOBAL['db']->query("UPDATE ".tname('friendguide')." SET fname='$setarr[name]' WHERE uid=$_SGLOBAL[supe_uid]");
 		}
 	
 		//变更记录
