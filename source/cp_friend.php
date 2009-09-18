@@ -115,7 +115,12 @@ if($op == 'add') {
 					$fname = addslashes($value['name']);
 				}
 
-				friend_update($space['uid'], $space['username'], $tospace['uid'], $tospace['username'], 'add', $gid, $fname);
+				$query = $_SGLOBAL['db']->query("SELECT uid, name, namestatus FROM ".tname('space')." WHERE uid='$space[uid]");
+				if($value = $_SGLOBAL['db']->fetch_array($query)) {
+					$name = addslashes($value['name']);
+				}
+
+				friend_update($space['uid'], $space['username'], $tospace['uid'], $tospace['username'], 'add', $gid, $name, $fname);
 
 				//事件发布
 				//加好友不发布事件

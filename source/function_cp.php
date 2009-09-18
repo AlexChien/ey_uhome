@@ -613,7 +613,7 @@ function cknote_uid($note, $filter) {
 }
 
 //更新双向好友状态
-function friend_update($uid, $username, $fuid, $fusername, $op='add', $gid=0, $fname='') {
+function friend_update($uid, $username, $fuid, $fusername, $op='add', $gid=0, $name='', $fname='') {
 	global $_SGLOBAL, $_SCONFIG;
 
 	if(empty($uid) || empty($fuid) || $uid == $fuid) return false;
@@ -631,9 +631,9 @@ function friend_update($uid, $username, $fuid, $fusername, $op='add', $gid=0, $f
 		//对方更新
 		if($op == 'invite') {
 			//邀请模式
-			inserttable('friend', array('uid'=>$fuid, 'fuid'=>$uid, 'fusername'=>$username,'fname'=>$fname, 'status'=>1, 'dateline'=>$_SGLOBAL['timestamp']), 0, true);
+			inserttable('friend', array('uid'=>$fuid, 'fuid'=>$uid, 'fusername'=>$username,'fname'=>$name, 'status'=>1, 'dateline'=>$_SGLOBAL['timestamp']), 0, true);
 		} else {
-			updatetable('friend', array('status'=>1, 'dateline'=>$_SGLOBAL['timestamp'],'fname'=>$fname), array('uid'=>$fuid, 'fuid'=>$uid));
+			updatetable('friend', array('status'=>1, 'dateline'=>$_SGLOBAL['timestamp'],'fname'=>$name), array('uid'=>$fuid, 'fuid'=>$uid));
 		}
 		
 		//用户中心添加
