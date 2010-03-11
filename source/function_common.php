@@ -89,10 +89,14 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
 
 //清空cookie
 function clearcookie() {
-	global $_SGLOBAL;
+	global $_SGLOBAL, $_SC;
 
 	obclean();
 	ssetcookie('auth', '', -86400 * 365);
+
+	//add by johnson s删除eycp同步登录通行证
+	setcookie('eycp', '', 0, '', $_SC[eycp_domain]);
+	
 	$_SGLOBAL['supe_uid'] = 0;
 	$_SGLOBAL['supe_username'] = '';
 	$_SGLOBAL['member'] = array();
@@ -149,8 +153,9 @@ function getonlineip($format=0) {
 function checkauth() {
 	global $_SGLOBAL, $_SC, $_SCONFIG, $_SCOOKIE, $_SN;
 
+	/* 不采用uchome的cookie来检查登陆状态，统一采用eycp这个cookie同步登陆通行证，注释掉下边这段 防止出现第三方网站删除了eycp后这里不能同步登出
 	if($_SGLOBAL['mobile'] && $_GET['m_auth']) $_SCOOKIE['auth'] = $_GET['m_auth'];
-	if($_SCOOKIE['auth']) {
+ 		if($_SCOOKIE['auth']) {
 		@list($password, $uid) = explode("\t", authcode($_SCOOKIE['auth'], 'DECODE'));
 		$_SGLOBAL['supe_uid'] = intval($uid);
 		if($password && $_SGLOBAL['supe_uid']) {
@@ -178,6 +183,10 @@ function checkauth() {
 				}
 			}
 		}
+	} 
+ 	不采用uchome的cookie来检查登陆状态，统一采用eycp这个cookie同步登陆通行证，注释掉上边这段 */
+	if($_COOKIE['eycp']){
+		login_from_ey_cookie_passport();
 	}
 	if(empty($_SGLOBAL['supe_uid'])) {
 		clearcookie();
@@ -2179,6 +2188,302 @@ function ckspacelog() {
 		$expiration = sgmdate('Y-m-d H:i', $value['expiration']);
 		showmessage('no_authority_expiration'.($value['expiration']?'_date':''), '', 1, array($expiration));
 	}
+}
+
+//add by johnson 用cookie通行证来登录或注册新uchome用户
+function login_from_ey_cookie_passport(){
+	global $_SGLOBAL, $_SC, $_SCONFIG, $_SN;
+	@list($openid, $login, $email, $nickname)=explode("\t", decode_ey_cookie_passport($_COOKIE['eycp']));
+	// echo var_dump($openid)."<br>";	
+	// echo var_dump(strstr($openid,"http://openid.localhost")!=false)."<br>";
+	// if (strpos($openid,"http://openid.enjoyoung.cn/")){
+	if (strstr($openid,"http://openid.localhost")!=false){
+		//先直接查session表里有没有，有就不用往下处理账号和新建session的逻辑
+		$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('session')." WHERE username='$login'");
+		if($member = $_SGLOBAL['db']->fetch_array($query)) {
+			$_SGLOBAL['supe_uid'] = $member['uid'];
+			$_SGLOBAL['supe_username'] = addslashes($member['username']);
+			$_SGLOBAL['session'] = $member;
+			// echo var_dump($_SGLOBAL['supe_uid'])."<br>";	
+			// echo var_dump($_SGLOBAL['supe_username'])."<br>";	
+			// echo var_dump($_SGLOBAL['session'])."<br>";	
+			// breakpoint();
+		}
+		else //没有session就处理新建session或者注册用户的逻辑
+		{	
+			//如果在uchome已有帐号
+			$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('user_openids')." WHERE url ='$openid'");
+			if($row = $_SGLOBAL['db']->fetch_array($query)){ 
+				$uid = $row['uid'];
+				// echo var_dump($uid)."<br>";	
+				// breakpoint();
+				$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('member')." WHERE uid='$uid'");
+				if($member = $_SGLOBAL['db']->fetch_array($query)) {
+					$_SGLOBAL['supe_username'] = addslashes($member['username']);
+					$session = array('uid' => $uid, 'username' => $_SGLOBAL['supe_username'], 'password' => $member['password'], 'name' => $nickname);
+					include_once(S_ROOT.'./source/function_space.php');
+					insertsession($session);//登录
+					//设置cookie以后直接通过cookie登陆，减小开销
+					// ssetcookie('auth', authcode("$member[password]\t$uid", 'ENCODE'), $cookietime);
+					// ssetcookie('loginuser', $member['username'], 31536000);	
+				} 
+				else {
+					$_SGLOBAL['supe_uid'] = 0;
+				}
+			} 
+			else { //如果没有uchome帐号，注册一个
+				// echo var_dump($openid)."<br>";				
+				eycp_register_to_ucenter($openid, $login, $email, $nickname);
+			}
+		}
+	}
+	else {
+		$_SGLOBAL['supe_uid'] = 0;
+		showmessage('only_xingshang');
+	}
+}
+
+//add by johnson 从cookie里解密登录信息
+function decode_ey_cookie_passport($crypted_txt){
+	global $_SC;
+	// $_SC['eycp_pub_key']写在config.new.php里,例如:
+	// $_SC['eycp_pub_key'] = 'file:///usr/local/webservice/ey_cookie_passport_key/public.pem'
+	$pub_key = openssl_get_publickey($_SC['eycp_pub_key']);
+	$crypt_cp = base64_decode($crypted_txt);
+	openssl_public_decrypt($crypt_cp,$cookie_passport,$pub_key);
+	return $cookie_passport;
+}
+
+//add by johnson 以cookie同步登陆通行证里的信息注册新用户
+function eycp_register_to_ucenter($openid, $login, $email, $nickname){	
+	/////////////////////////////////////
+	//好友邀请数据预处理
+	include_once(S_ROOT.'./source/function_cp.php');
+	$uid = empty($_GET['uid'])?0:intval($_GET['uid']);
+	$code = empty($_GET['code'])?'':$_GET['code'];
+	$app = empty($_GET['app'])?'':intval($_GET['app']);
+	$invite = empty($_GET['invite'])?'':$_GET['invite'];
+	$invitearr = array();
+	$reward = getreward('invitecode', 0);
+	$pay = $app ? 0 : $reward['credit'];
+
+	if($uid && $code && !$pay) {//邀请玩应用home就不给奖励了？
+		$m_space = getspace($uid);//$_SN在此被赋值
+		// echo var_dump($_SN)."--_SN在getspace这个函数中赋值了...<br>";
+		// echo var_dump($_SESSION['SN'])."--_SESSION['SN']<br>";
+		// echo var_dump($m_space['uid'])."--m_space['uid']<br>";	
+		// echo var_dump($app)."--app<br>";
+		// echo var_dump($code)."--code<br>";	
+		// echo var_dump($_SCONFIG['sitekey']).'--sitekey<br>';
+		// echo space_key($m_space, $app)."--space_key<br>";	
+		if($code == space_key($m_space, $app)) {//验证通过
+			$invitearr['uid'] = $uid;
+			$invitearr['username'] = $m_space['username'];
+		}
+		$url_plus = "uid=$uid&app=$app&code=$code";
+		// echo var_dump($uid)."--uid<br>";
+		// echo var_dump($m_space['username'])."--m_space['username']<br>";
+		// echo var_dump($invitearr)."--_invitearr1<br>";
+		// echo var_dump($url_plus)."--url_plus1<br>";
+	} elseif($uid && $invite) {
+		include_once(S_ROOT.'./source/function_cp.php');
+		$invitearr = invite_get($uid, $invite);
+		$url_plus = "uid=$uid&invite=$invite";
+		// echo var_dump($invitearr)."--_invitearr2<br>";
+	}
+
+	$jumpurl = $app?"userapp.php?id=$app&my_extra=invitedby_bi_{$uid}_{$code}&my_suffix=Lw%3D%3D":'space.php?do=home';
+	//好友邀请数据预处理结束
+	/////////////////////////////////////
+
+	/////////////////////////////////////
+	//注册到ucenter
+		
+	// 不采用uhome及ucenter自己的登录机制，所以随机填个它的密码
+	$password = md5("$newuid|$_SGLOBAL[timestamp]");//本地密码随机生成
+
+	//用ucenter api注册新用户
+	include(S_ROOT.'./uc_client/client.php');
+	$newuid = uc_user_register($login, $password, $email);
+	// echo var_dump($newuid)."--newuid<br/>";
+	// breakpoint();	
+	if($newuid <= 0) {
+		if($newuid == -1) {showmessage('user_name_is_not_legitimate');} 
+		elseif($newuid == -2) {showmessage('include_not_registered_words');}
+		elseif($newuid == -3) {// showmessage('user_name_already_exists');
+		// 如果已经在ucenter存在先通过discuz注册的用户,则为他开通uchome
+			//同步获取用户源
+			if(!$passport = get_passport_by_login($login)) {
+				showmessage('login_failure_please_re_login', 'OpenID.call.php');
+			}
+			// echo var_dump($passport)."--passport<br/>";
+			$setarr = array(
+				'uid' => $passport['uid'],
+				'username' => addslashes($passport['username']),
+				'password' => md5("$passport[uid]|$_SGLOBAL[timestamp]")//本地密码随机生成
+			);
+			// echo var_dump($setarr)."--setarr<br/>";
+			// echo var_dump($email)."--email<br/>";
+			ey_regiter_user_to_uchome($setarr,$openid,$login,$email,$nickname,$invitearr, $url_plus,$app,$jumpurl);
+		} 
+		elseif($newuid == -4) {showmessage('email_format_is_wrong');} 
+		elseif($newuid == -5) {showmessage('email_not_registered');}
+		elseif($newuid == -6) {showmessage('email_has_been_registered');} 
+		else {showmessage('register_error');}
+	} 
+	else //在ucenter里没有账号的
+	{
+		$setarr = array(
+			'uid' => $newuid,
+			'username' => $login,
+			'password' => md5("$newuid|$_SGLOBAL[timestamp]")//本地密码随机生成
+		);
+		ey_regiter_user_to_uchome($setarr,$openid,$login, $email,$nickname,$invitearr, $url_plus,$app,$jumpurl);
+	}
+}
+
+/////////////////////////////////////
+// 将eycpt同步登陆用户注册到uchome
+function ey_regiter_user_to_uchome($setarr,$openid,$login, $email,$nickname,$invitearr, $url_plus,$app,$jumpurl){
+	global $_SCONFIG, $_SGLOBAL, $_SN;
+	
+	$newuid=$setarr['uid'];
+	
+	// echo var_dump($_SCONFIG)."--_SCONFIG<br/>";
+ 	// echo var_dump($_SGLOBAL)."--_SGLOBAL<br/>";
+	// echo var_dump($setarr)."--setarr<br/>";	
+	// echo var_dump($invitearr)."--invitearr<br>";
+	// echo var_dump($url_plus)."--url_plus<br>";
+	// echo var_dump($app)."--app<br>";
+	// echo var_dump($_SN)."--_SN1<br>";
+	// echo var_dump($jumpurl)."--_jumpurl<br/>";
+	// echo var_dump($openid)."--openid<br/>";
+	// echo var_dump($login)."--login<br/>";
+	// echo var_dump($email)."--email<br/>";
+	
+					// breakpoint();
+	
+	//开通空间
+	// echo var_dump($_SGLOBAL['db'])."--_SGLOBAL['db']<br/>";
+	$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('space')." WHERE uid='$setarr[uid]'");
+	// echo var_dump($query)."--query<br/>";
+	
+	include(S_ROOT.'./source/function_space.php');
+	if(!$space = $_SGLOBAL['db']->fetch_array($query)) {
+		$space = space_open($setarr['uid'], $setarr['username'], 0, $email, $nickname);
+	}		
+	// echo var_dump($space)."--space<br/>";
+	// breakpoint();
+	$_SGLOBAL['member'] = $space;
+	// echo var_dump($_SGLOBAL['member'])."--_SGLOBAL['member']<br/>";
+
+	//实名
+	realname_set($space['uid'], $space['username'], $space['name'], $space['namestatus']);//这里$_SN再次被赋值
+	
+	// echo var_dump($_SN)."--_SNn2<br>";
+
+	//检索当前用户
+	$query = $_SGLOBAL['db']->query("SELECT password FROM ".tname('member')." WHERE uid='$setarr[uid]'");
+	if($value = $_SGLOBAL['db']->fetch_array($query)) {
+		$setarr['password'] = addslashes($value['password']);
+	} else {
+		//更新本地用户库
+		inserttable('member', $setarr, 0, true);
+	}
+
+	// 关联uid和openid
+	$openids = array(
+				'uid' => $setarr['uid'],
+				'url' => $openid
+	);
+	inserttable('user_openids', $openids, 0, true);//uchome的db链接
+
+	//默认好友
+	$flog = $inserts = $fuids = $pokes = array();
+	// echo var_dump($_SCONFIG['defaultfusername'])."--_SCONFIG['defaultfusername']<br/>";
+	if(!empty($_SCONFIG['defaultfusername'])) {
+		$query = $_SGLOBAL['db']->query("SELECT uid,username FROM ".tname('space')." WHERE username IN (".simplode(explode(',', $_SCONFIG['defaultfusername'])).")");
+		while ($value = $_SGLOBAL['db']->fetch_array($query)) {
+			$value = saddslashes($value);
+			$fuids[] = $value['uid'];
+			$inserts[] = "('$newuid','$value[uid]','$value[username]','1','$_SGLOBAL[timestamp]')";
+      // $inserts[] = "('$value[uid]','$newuid','$username','1','$_SGLOBAL[timestamp]')";
+			$inserts[] = "('$value[uid]','$newuid','$setarr[username]','1','$_SGLOBAL[timestamp]')";
+			$pokes[] = "('$newuid','$value[uid]','$value[username]','".addslashes($_SCONFIG['defaultpoke'])."','$_SGLOBAL[timestamp]')";
+			//添加好友变更记录
+			$flog[] = "('$value[uid]','$newuid','add','$_SGLOBAL[timestamp]')";
+		}/////////
+		if($inserts) {
+			$_SGLOBAL['db']->query("REPLACE INTO ".tname('friend')." (uid,fuid,fusername,status,dateline) VALUES ".implode(',', $inserts));
+			$_SGLOBAL['db']->query("REPLACE INTO ".tname('poke')." (uid,fromuid,fromusername,note,dateline) VALUES ".implode(',', $pokes));
+			$_SGLOBAL['db']->query("REPLACE INTO ".tname('friendlog')." (uid,fuid,action,dateline) VALUES ".implode(',', $flog));
+
+			//添加到附加表
+			$friendstr = empty($fuids)?'':implode(',', $fuids);
+			updatetable('space', array('friendnum'=>count($fuids), 'pokenum'=>count($pokes)), array('uid'=>$newuid));
+			updatetable('spacefield', array('friend'=>$friendstr, 'feedfriend'=>$friendstr), array('uid'=>$newuid));
+
+			//更新默认用户好友缓存
+			include_once(S_ROOT.'./source/function_cp.php');
+			foreach ($fuids as $fuid) {friend_cache($fuid);}
+		}
+	}
+
+	//清理在线session
+	insertsession($setarr);
+
+	//设置cookie
+	// ssetcookie('auth', authcode("$setarr[password]\t$setarr[uid]", 'ENCODE'), 2592000);
+	// ssetcookie('loginuser', $username, 31536000);
+	// ssetcookie('_refer', '');
+
+	// echo var_dump($invitearr)."--invitearr<br/>";	
+	//好友邀请
+	if($invitearr) {
+		//成为好友
+		invite_update($invitearr['id'], $setarr['uid'], $setarr['username'], $invitearr['uid'], $invitearr['username'], $app);
+		//统计更新
+		include_once(S_ROOT.'./source/function_cp.php');
+		if($app) {
+			updatestat('appinvite');
+		} else {
+			updatestat('invite');
+		}
+	}
+
+	$_SGLOBAL['supe_uid'] = $space['uid'];
+	//判断用户是否设置了头像
+	$reward = $setarr = array();
+	$experience = $credit = 0;
+	$avatar_exists = ckavatar($space['uid']);
+	if($avatar_exists) {
+		if(!$space['avatar']) {
+			//奖励积分
+			$reward = getreward('setavatar', 0);
+			$credit = $reward['credit'];
+			$experience = $reward['experience'];
+			if($credit) {
+				$setarr['credit'] = "credit=credit+$credit";
+			}
+			if($experience) {
+				$setarr['experience'] = "experience=experience+$experience";
+			}
+			$setarr['avatar'] = 'avatar=1';
+			$setarr['updatetime'] = "updatetime=$_SGLOBAL[timestamp]";
+		}
+	} else {
+		if($space['avatar']) {
+			$setarr['avatar'] = 'avatar=0';
+		}
+	}
+
+	//变更记录
+	if($_SCONFIG['my_status']) inserttable('userlog', array('uid'=>$newuid, 'action'=>'add', 'dateline'=>$_SGLOBAL['timestamp']), 0, true);
+
+	// echo var_dump($jumpurl)."--jumpurl<br/>";
+	// breakpoint();
+
+	// showmessage('login_success', $jumpurl);			
 }
 
 ?>
