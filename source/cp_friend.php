@@ -15,6 +15,9 @@ $space['key'] = space_key($space);
 
 $actives = array($op=>' class="active"');
 
+	// echo var_dump($op).'---op<br>';
+	// breakpoint();
+
 if($op == 'add') {
 
 	if(!checkperm('allowfriend')) {
@@ -115,7 +118,7 @@ if($op == 'add') {
 					$fname = addslashes($value['name']);
 				}
 
-				$query = $_SGLOBAL['db']->query("SELECT uid, name, namestatus FROM ".tname('space')." WHERE uid='$space[uid]");
+				$query = $_SGLOBAL['db']->query("SELECT uid, name, namestatus FROM ".tname('space')." WHERE uid=$space[uid]");
 				if($value = $_SGLOBAL['db']->fetch_array($query)) {
 					$name = addslashes($value['name']);
 				}
@@ -153,7 +156,8 @@ if($op == 'add') {
 		}
 	}
 
-} elseif($op == 'ignore') {
+} 
+elseif($op == 'ignore') {
 
 	//检测用户
 	if($uid) {
@@ -183,7 +187,8 @@ if($op == 'add') {
 		}
 	}
 	
-} elseif($op == 'addconfirm') {
+} 
+elseif($op == 'addconfirm') {
 
 	if($_GET['key'] == $space['key']) {
 		
@@ -216,16 +221,45 @@ if($op == 'add') {
 
 	showmessage('do_success', 'cp.php?ac=friend&op=request', 0);
 
-} elseif($op == 'syn') {
+} 
+elseif($op == 'syn') {
+
+  // echo var_dump(isset($_SCOOKIE['synfriend'])).'---_SCOOKIE[synfriend]<br>';
+  // echo var_dump(empty($_SCONFIG['uc_status'])).'---_SCOOKIE[uc_status]<br>';
+  // echo var_dump($uid).'---uid<br>';
+  // echo var_dump($_SGLOBAL['supe_uid']).'---_SGLOBAL[supe_uid]<br>';
 
 	//获取用户中心我的fans列表
-	if(isset($_SCOOKIE['synfriend']) || empty($_SCONFIG['uc_status'])) {
-		exit();
-	}
+	// if(isset($_SCOOKIE['synfriend']) || empty($_SCONFIG['uc_status'])) {
+	// 	exit();
+	// }
 
 	include_once S_ROOT.'./uc_client/client.php';
+	// array uc_friend_ls(integer uid [, integer page , integer pagesize , integertotalnum , integer direction])
+	// teger uid	用户 ID
+	// integer page	当前页编号，默认值 1
+	// integer pagesize	每页最大条目数，默认值 10
+	// integer totalnum	好友总数，默认值 10
+	// integer direction	0:(默认值) 指定用户的全部好友
+	// 1:正向，指定用户添加的好友，但没被对方添加
+	// 2:反向，指定用户被哪些用户添加为好友（粉丝）
+	// 3:双向，互相添加为好友
+	// 返回值
+	// 值	含义
+	// array	好友列表数据，其中单条好友数组结构请参看附表
+	// 	单条好友数组结构
+	// integer ['uid']	用户 ID
+	// integer ['friendid']	好友用户 ID
+	// integer ['direction']	0:(默认值) 指定用户的全部好友
+	// 1:正向，指定用户添加的好友，但没被对方添加
+	// 2:反向，指定用户被哪些用户添加为好友（粉丝）
+	// 3:双向，互相添加为好友
+	// string ['username']	好友用户名
 	$buddylist = uc_friend_ls($_SGLOBAL['supe_uid'], 1, 999, 999, 2);//别人加了我
-
+	
+  // echo var_dump($buddylist).'---buddylist<br>';
+	// breakpoint();
+	
 	$havas = array();
 	if($buddylist && is_array($buddylist)) {
 		foreach($buddylist as $key => $buddy) {
@@ -246,6 +280,8 @@ if($op == 'add') {
 			}
 		}
 	}
+	
+  // echo var_dump($havas).'---havas<br>';  
 
 	//查找当前好友
 	if($havas) {
