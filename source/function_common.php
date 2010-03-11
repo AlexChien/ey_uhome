@@ -2196,8 +2196,8 @@ function login_from_ey_cookie_passport(){
 	@list($openid, $login, $email, $nickname)=explode("\t", decode_ey_cookie_passport($_COOKIE['eycp']));
 	// echo var_dump($openid)."<br>";	
 	// echo var_dump(strstr($openid,"http://openid.localhost")!=false)."<br>";
-	// if (strpos($openid,"http://openid.enjoyoung.cn/")){
-	if (strstr($openid,"http://openid.localhost")!=false){
+  if (strpos($openid,"http://openid.enjoyoung.cn/")){
+  // if (strstr($openid,"http://openid.localhost")!=false){
 		//先直接查session表里有没有，有就不用往下处理账号和新建session的逻辑
 		$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('session')." WHERE username='$login'");
 		if($member = $_SGLOBAL['db']->fetch_array($query)) {
