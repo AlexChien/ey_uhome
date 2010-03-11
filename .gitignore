@@ -1,6 +1,12 @@
 .project
 .cache
+.cache/*
 .settings
+data
 data/tpl_cache/*
 data/log/*.php
 config.php
+.buildpath
+MyProject.kpf
+dummy.php
+nbproject/
