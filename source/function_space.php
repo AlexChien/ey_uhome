@@ -9,7 +9,7 @@ if(!defined('IN_UCHOME')) {
 }
 
 //开通空间
-function space_open($uid, $username, $gid=0, $email='') {
+function space_open($uid, $username, $gid=0, $email='', $name='') {
 	global $_SGLOBAL, $_SCONFIG;
 
 	if(empty($uid) || empty($username)) return array();
@@ -23,6 +23,7 @@ function space_open($uid, $username, $gid=0, $email='') {
 	$space = array(
 		'uid' => $uid,
 		'username' => $username,
+		'name' => $name,
 		'dateline' => $_SGLOBAL['timestamp'],
 		'groupid' => $gid,
 		'regip' => getonlineip()
