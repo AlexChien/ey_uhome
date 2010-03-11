@@ -32,6 +32,12 @@ $_SC['tplrefresh']		= 0; //判断模板是否更新的效率等级，数值越�
 $_SC['founder'] 		= '1'; //创始人 UID, 可以支持多个创始人，之间使用 “,” 分隔。部分管理功能只有创始人才可操作。
 $_SC['allowedittpl']	= 0; //是否允许在线编辑模板。为了服务器安全，强烈建议关闭
 
+//add by johnson enjoyoung cookie passport public key path
+// $_SC['eycp_pub_key'] = 'file:///usr/local/webservice/ey_cookie_passport_key/public.pem'
+$_SC['eycp_pub_key'] = 'file:///Users/stainless/public.pem';
+// eycp 作用域
+$_SC['eycp_domain'] = '.localhost.com';
+
 //应用的UCenter配置信息(可以到UCenter后台->应用管理->查看本应用->复制里面对应的配置信息进行替换)
 define('UC_CONNECT', 'mysql'); // 连接 UCenter 的方式: mysql/NULL, 默认为空时为 fscoketopen(), mysql 是直接连接的数据库, 为了效率, 建议采用 mysql
 define('UC_DBHOST', 'localhost'); // UCenter 数据库主机
