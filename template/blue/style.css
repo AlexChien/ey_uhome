@@ -218,7 +218,12 @@ a { color: #3B5998; }
 .showflash{ background: #F7F7F7; border: 1px solid #CCC; }
 
 .atitle{ background: #F7F7F7; }
-#header .logo a{ background:transparent url(image/logo.gif) no-repeat scroll left center; }
+/*#beta{float:left;top:5px;margin-left:-48px;display:inline;color:white;}*/
+/*#header .logo a{ background:transparent url(image/logo.png) no-repeat scroll left center; }*/
+#header .logo a{ width:85px; height:40px; display:block; background:transparent url(image/logo.png) no-repeat scroll left center; overflow:hidden; }
+#header .logo a img{ margin: -200px; }
+/*--for ie6 png fix--*/
+html .png{ behavior: expression((this.runtimeStyle.behavior="none")&&(this.pngSet?this.pngSet=true:(this.nodeName == "IMG" && this.src.toLowerCase().indexOf('.png')>-1?(this.runtimeStyle.backgroundImage = "none", this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.src + "', sizingMethod='image')", this.src = "../images/blank.gif"):(this.origBg = this.origBg? this.origBg :this.currentStyle.backgroundImage.toString().replace('url("','').replace('")',''), this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.origBg + "', sizingMethod='crop')", this.runtimeStyle.backgroundImage = "none")),this.pngSet=true) ); }
 
 
 .susb .fuser{ background: #F7F7F7; }

@@ -12,8 +12,11 @@ a { color: #999; }
 #header { margin: 0; background: url(images/top_bg.jpg) repeat-x left top; color: #CCC; }
 .headerwarp { background: none; }
 #header a { color: #2C629E; }
-#header .logo a { width: 82px; height: 40px; background: url(images/logo.gif) no-repeat left center; overflow: hidden; display: block; }
+#header .logo a { width: 82px; height: 40px; background: url(images/logo.png) no-repeat left center; overflow: hidden; display: block; }
 #header .logo a img { margin: -200px; }
+#beta{float:left;top:5px;margin-left:-48px;display:inline;color:black;}
+/*--for ie6 png fix--*/
+html .png{ behavior: expression((this.runtimeStyle.behavior="none")&&(this.pngSet?this.pngSet=true:(this.nodeName == "IMG" && this.src.toLowerCase().indexOf('.png')>-1?(this.runtimeStyle.backgroundImage = "none", this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.src + "', sizingMethod='image')", this.src = "../images/blank.gif"):(this.origBg = this.origBg? this.origBg :this.currentStyle.backgroundImage.toString().replace('url("','').replace('")',''), this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.origBg + "', sizingMethod='crop')", this.runtimeStyle.backgroundImage = "none")),this.pngSet=true) ); }
 #wrap{ width: 990px; } 
 .login_thumb { background-image: url(images/login_bg.gif); }
 #space_page { margin: 60px 0 0; padding: 10px; width: 970px; background: #000 url(images/ybg.gif) no-repeat left top; }
