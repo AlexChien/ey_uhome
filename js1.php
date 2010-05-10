@@ -20,7 +20,7 @@ if($id) {
 	$updatetime = $_SGLOBAL['block'][$id];
 	
 	//»º´æ
-	$cachefile = "./data/block_cache/block_$id_new.js";
+	$cachefile = "./data/block_cache/block_new_$id.js";
 	if($updatetime > 0 && file_exists($cachefile) && (time() - filemtime($cachefile) < $updatetime)) {
 		if(@$fp = fopen($cachefile, 'r')) {
 			@$content = fread($fp, filesize($cachefile));
