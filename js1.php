@@ -54,7 +54,7 @@ if($id) {
 		$obcontent = preg_replace($s, $r, $obcontent);
 		$lines = explode("\n", $obcontent);
 		foreach ($lines as $line) {
-			$line = addcslashes(trim($line), '/\'\\');
+//			$line = addcslashes(trim($line), '/\'\\');
 			$content .= "$line\n";
 		}
 	} else {
@@ -68,7 +68,7 @@ if($id) {
 	$file = './data/adtpl/'.$adid.'.htm';
 	if(@$lines = file($file)) {
 		foreach ($lines as $line) {
-			$line = addcslashes(trim($line), '/\'\\');
+//			$line = addcslashes(trim($line), '/\'\\');
 			echo "$line\n";
 		}
 	} else {
